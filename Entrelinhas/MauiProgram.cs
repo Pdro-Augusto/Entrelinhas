@@ -2,6 +2,10 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 
+#if ANDROID
+    using Entrelinhas.Platforms.Android;
+#endif
+
 namespace Entrelinhas
 {
     public static class MauiProgram
@@ -18,11 +22,17 @@ namespace Entrelinhas
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("Fraunces.ttf", "Fraunces");
                     fonts.AddFont("Karla.ttf", "Karla");
+                })
+                .ConfigureMauiHandlers(handlers =>
+                {
+                    #if ANDROID
+                        handlers.AddHandler<Shell, CustomShellHandler>();
+                    #endif
                 });
 
-#if DEBUG
-            builder.Logging.AddDebug();
-#endif
+            #if DEBUG
+                builder.Logging.AddDebug();
+            #endif
 
             return builder.Build();
         }
