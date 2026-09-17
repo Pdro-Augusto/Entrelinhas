@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Entrelinhas.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Entrelinhas.Views"
+    
+    Shell.TabBarBackgroundColor="{StaticResource BackgroundColor}"
+    Shell.TabBarForegroundColor="{StaticResource MainColor}"
+    Shell.TabBarUnselectedColor="#804A1B0C"
+    
+    Shell.NavBarIsVisible="False">
+
+    <TabBar>
+        <Tab Title=""
+             Icon="estante_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:EstantePage}"/>
+        </Tab>
+
+        <Tab Title=""
+             Icon="pesquisa_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:PesquisaPage}"/>
+        </Tab>
+
+        <Tab Title=""
+             Icon="scanner_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:ScannerPage}"/>
+        </Tab>
+
+        <Tab Title=""
+             Icon="stats_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:StatsPage}"/>
+        </Tab>
+
+        <Tab Title=""
+             Icon="user_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:UserPage}"/>
+        </Tab>
+    </TabBar>
+</Shell>
