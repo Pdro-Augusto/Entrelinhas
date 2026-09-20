@@ -7,7 +7,10 @@ namespace Entrelinhas
         public App()
         {
             InitializeComponent();
+
+            Routing.RegisterRoute("addlivro", typeof(Views.AddLivroPage));
         }
+
 
         protected override Window CreateWindow(IActivationState? activationState)
         {

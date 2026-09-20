@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
+using ZXing.Net.Maui.Controls;
 
 #if ANDROID
     using Entrelinhas.Platforms.Android;
@@ -16,6 +17,8 @@ namespace Entrelinhas
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseBarcodeReader()
+
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -23,6 +26,7 @@ namespace Entrelinhas
                     fonts.AddFont("Fraunces.ttf", "Fraunces");
                     fonts.AddFont("Karla.ttf", "Karla");
                 })
+
                 .ConfigureMauiHandlers(handlers =>
                 {
                     #if ANDROID

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Entrelinhas.Views.AddLivroPage"
+             Title="AddLivroPage"
+             Shell.TabBarIsVisible="False">
+
+    <VerticalStackLayout Padding="10,20,10,20" Spacing="15" HorizontalOptions="Center">
+        
+        <Label Text="Adicionar Livro" FontAttributes="Bold" FontSize="30" />
+        
+        <Image x:Name="imgCapa" HeightRequest="200" WidthRequest="150" Aspect="AspectFill" />
+        <Label x:Name="lbTitulo" Text="Título:" FontSize="20" />
+        <Label x:Name="lbAutor" Text="Autor:" FontSize="20" />
+        <Label x:Name="lbEditora" Text="Editora:" FontSize="20" />
+        <Label x:Name="lbAno" Text="Ano:" FontSize="20" />
+        <Label x:Name="lbISBN" Text="ISBN:" FontSize="20" />
+        <Label x:Name="lbPaginas" Text="Páginas:" FontSize="20" />
+        <Label x:Name="lbSinopse" Text="Sinopse:" FontSize="20" MaxLines="5"/>
+
+        <HorizontalStackLayout Spacing="5">
+            <Button Text="btCancelar" Clicked="btCancelar_Clicked"  BackgroundColor="Gray" TextColor="White" />
+            <Button Text="btSalvar" Clicked="btSalvar_Clicked" BackgroundColor="Green" TextColor="White" />
+        </HorizontalStackLayout>
+
+        <ScrollView>
+            <Label x:Name="lbJson" Text="JSON: " FontSize="20" />
+        </ScrollView>
+
+    </VerticalStackLayout>
+    
+</ContentPage>
