@@ -24,17 +24,44 @@
                                HorizontalOptions="Fill">
             <Button x:Name="btAllBooks"
                     Text="Todos"
+                    TextColor="{StaticResource FontColor}"
                     Clicked="btAllBooks_Clicked"
                     FontFamily="Karla"
                     FontAttributes="Bold"
                     FontSize="13"
                     CornerRadius="15"
-                    HeightRequest="36"
+                    HeightRequest="25"
                     Padding="16, 5"
                     HorizontalOptions="Fill"
-                    BackgroundColor="{StaticResource MainColor}"/>
+                    BorderWidth="1"
+                    BorderColor="{StaticResource MainColor}"
+                    BackgroundColor="{StaticResource MainColorAlpha}">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="0.9"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="PointerOver"/>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+
+            </Button>
+
             <Button x:Name="btReading"
                     Text="Lendo"
+                    TextColor="{StaticResource FontColor}"
                     Clicked="btReading_Clicked"
                     FontFamily="Karla"
                     FontAttributes="Bold"
@@ -42,9 +69,34 @@
                     CornerRadius="15"
                     HeightRequest="25"
                     Padding="16, 5"
-                    BackgroundColor="{StaticResource MainColor}"/>
+                    BorderWidth="1"
+                    BorderColor="{StaticResource MainColor}"
+                    BackgroundColor="{StaticResource MainColorAlpha}">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="0.9"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="PointerOver"/>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
+
             <Button x:Name="btRead"
                     Text="Lidos"
+                    TextColor="{StaticResource FontColor}"
                     Clicked="btRead_Clicked"
                     FontFamily="Karla"
                     FontAttributes="Bold"
@@ -52,13 +104,36 @@
                     CornerRadius="15"
                     HeightRequest="25"
                     Padding="16, 5"
-                    BackgroundColor="{StaticResource MainColor}"/>
+                    BorderWidth="1"
+                    BorderColor="{StaticResource MainColor}"
+                    BackgroundColor="{StaticResource MainColorAlpha}">
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="0.9"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="PointerOver"/>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
         </HorizontalStackLayout>
         
                    <!-- Conteúdo -->
         <Grid Grid.Row="2">
             <VerticalStackLayout x:Name="EmptyState"
-                                 IsVisible="False"
+                                 IsVisible="True"
                                  VerticalOptions="Center"
                                  HorizontalOptions="Center"
                                  Padding="40"
@@ -90,6 +165,8 @@
                         Margin="0, 10, 0, 0"/>
             </VerticalStackLayout>
 
+            <!-- Dá load nos livros -->
+            
             <CollectionView x:Name="BookList"
                             Margin="16, 0, 16, 90">
                 <CollectionView.ItemsLayout>

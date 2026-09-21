@@ -8,6 +8,7 @@
     <Color x:Key="BackgroundColor">#EDEADE</Color>
     <Color x:Key="FontColor">#4A1B0C</Color>
     <Color x:Key="MainColor">#D85A30</Color>
+    <Color x:Key="MainColorAlpha">#10D85A30</Color>
     <Color x:Key="SecundaryColor">#F4B6A0</Color>
     <Color x:Key="SubFontColor">#010101</Color>
     <Color x:Key="SubFontAlpha">#80010101</Color>
