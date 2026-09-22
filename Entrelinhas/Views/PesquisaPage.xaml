@@ -3,4 +3,76 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Entrelinhas.Views.PesquisaPage"
              BackgroundColor="{StaticResource BackgroundColor}">
+    <!-- Barra de pesquisa -->
+    <Grid RowDefinitions="Auto, Auto, *" RowSpacing="15">
+        <Grid Grid.Row="0"
+              Padding="20, 30, 20, 10"
+              ColumnDefinitions="*, Auto"
+              ColumnSpacing="10">
+            <Border StrokeShape="RoundRectangle 25"
+                    Stroke="{StaticResource MainColor}"
+                    Background="{StaticResource MainColorAlpha}"
+                    Padding="10,0"
+                    HeightRequest="45">
+                <Grid ColumnDefinitions="Auto, *">
+                      <Entry Grid.Column="1"
+                             x:Name="searchBook"
+                             Placeholder="Procure por ISBN, Título, Autor..."
+                             PlaceholderColor="{StaticResource SubFontAlpha}"
+                             BackgroundColor="Transparent"/>
+                </Grid>
+            </Border>
+
+            <Button x:Name="btSearch"
+                    Clicked="btSearch_Clicked"
+                    Grid.Column="1"
+                    ImageSource="pesquisa_alt.png"
+                    CornerRadius="80"
+                    BackgroundColor="{StaticResource MainColor}"/>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="2" 
+                             x:Name="emptyState"
+                             IsVisible="True"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Padding="40"
+                             Spacing="15">
+            <Image Source="pesquisa_content.png"
+                   HeightRequest="100"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            <Label Text="hmm, nada por aqui ainda..."
+                   TextColor="{StaticResource FontColor}"
+                   FontFamily="Fraunces"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="que tal adicionar o seu "
+                              TextColor="{StaticResource SubFontAlpha}"
+                              FontSize="15"
+                              FontFamily="Karla"/>
+                        <Span Text="primeiro livro? :)"
+                              TextColor="{StaticResource SubFontAlpha}"
+                              FontSize="15"
+                              FontFamily="Karla"
+                              FontAttributes="Bold"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Button x:Name="btSearchByScanner"
+                    ImageSource="scanner_alt.png"
+                    Text="adicionar via scanner"
+                    BackgroundColor="{StaticResource MainColor}"
+                    CornerRadius="15"
+                    FontFamily="Karla"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    ContentLayout="Left, 10"/>
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>

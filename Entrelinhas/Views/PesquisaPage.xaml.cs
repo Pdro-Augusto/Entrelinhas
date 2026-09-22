@@ -6,4 +6,9 @@ public partial class PesquisaPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    private void btSearch_Clicked(object sender, EventArgs e)
+    {
+
+    }
 }

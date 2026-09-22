@@ -31,6 +31,12 @@ namespace Entrelinhas
                 {
                     #if ANDROID
                         handlers.AddHandler<Shell, CustomShellHandler>();
+
+                        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("RemoveUnderline", (handler, view) =>
+                            {
+                                handler.PlatformView.BackgroundTintList =
+                                Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+                            });
                     #endif
                 });
 
