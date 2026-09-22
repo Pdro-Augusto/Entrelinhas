@@ -61,17 +61,20 @@ public partial class AddLivroPage : ContentPage
                 NovoLivro.Paginas = info.TryGetProperty("pageCount", out var pg) ? pg.GetInt32() : null;
                 NovoLivro.Sinopse = info.TryGetProperty("description", out var s) ? s.GetString() : null;
                 NovoLivro.Genero = info.TryGetProperty("categories", out var c) ? c[0].GetString() : null;
-                NovoLivro.CapaUrl = info.TryGetProperty("imageLinks", out var img) && img.TryGetProperty("thumbnail", out var th)
-                    ? th.GetString() : null;
+                NovoLivro.CapaUrl = info.TryGetProperty("imageLinks", out var img)
+                    && img.TryGetProperty("thumbnail", out var th)
+                    ? th.GetString()?.Replace("http://", "https://")
+                    : null;
 
                 // Atualiza os Labels/Entries da tela
+                imgCapa.Source = NovoLivro.CapaUrl;
                 lbTitulo.Text = NovoLivro.Titulo;
                 lbAutor.Text = NovoLivro.Autor;
                 lbEditora.Text = NovoLivro.Editora;
                 lbAno.Text = $"Ano: {NovoLivro.Ano?.ToString()}";
                 lbPaginas.Text = $"Páginas: {NovoLivro.Paginas?.ToString()}";
                 lbSinopse.Text = NovoLivro.Sinopse;
-                lbJson.Text = json;
+                lbJson.Text = NovoLivro.CapaUrl;
             });
         }
         catch (Exception ex)

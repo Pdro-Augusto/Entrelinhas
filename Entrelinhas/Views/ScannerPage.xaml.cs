@@ -36,4 +36,26 @@ public partial class ScannerPage : ContentPage
             });
         }
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Garante que a câmera está ligada quando a página aparece
+        if (cameraBarcodeReaderView != null)
+        {
+            cameraBarcodeReaderView.IsDetecting = true;
+        }
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+
+        // Desliga a detecção quando você sai da página
+        if (cameraBarcodeReaderView != null)
+        {
+            cameraBarcodeReaderView.IsDetecting = false;
+        }
+    }
 }

@@ -9,7 +9,7 @@
         
         <Label Text="Adicionar Livro" FontAttributes="Bold" FontSize="30" />
         
-        <Image x:Name="imgCapa" HeightRequest="200" WidthRequest="150" Aspect="AspectFill" />
+        <Image x:Name="imgCapa" Source="book_icon.png" HeightRequest="200" WidthRequest="150" Aspect="AspectFill" />
         <Label x:Name="lbTitulo" Text="Título:" FontSize="20" />
         <Label x:Name="lbAutor" Text="Autor:" FontSize="20" />
         <Label x:Name="lbEditora" Text="Editora:" FontSize="20" />
