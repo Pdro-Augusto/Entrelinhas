@@ -1,13 +1,17 @@
+using Entrelinhas.Services;
+
 namespace Entrelinhas.Views;
 
 public partial class EstantePage : ContentPage
 {
-	public EstantePage()
+    private readonly DatabaseService _databaseService;
+    public EstantePage(DatabaseService databaseService)
 	{
 		InitializeComponent();
+		_databaseService = databaseService;
 	}
 
-    private Button latestButtonClicked = null;
+    private Button? latestButtonClicked = null;
 
     private void ResetLastButton()
     {
@@ -55,4 +59,20 @@ public partial class EstantePage : ContentPage
     {
 
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        var livros = await _databaseService.ObterTodosAsync();
+        BookList.ItemsSource = livros;
+    }
+
+    //private async void OnTappedBook(object sender, TappedEventArgs e)
+    //{
+    //    if (e.Parameter is Livro livro)
+    //    {
+    //        await Shell.Current.GoToAsync($"detalhelivro?id={livro.Id}");
+    //    }
+    //}
 }

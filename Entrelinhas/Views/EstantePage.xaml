@@ -180,15 +180,23 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <VerticalStackLayout>
-                            <Border StrokeShape="RoundRectangle 8"
-                                    HeightRequest="110"
-                                    BackgroundColor="{Binding PlaceholderColor}">
+                            <Border Stroke="{StaticResource FontColor}"
+                                    StrokeShape="RoundRectangle 8"
+                                    HeightRequest="150"
+                                    WidthRequest="105"
+                                    BackgroundColor="{StaticResource MainColorAlpha}">
+
+                                <Image Aspect="AspectFill"
+                                       HeightRequest="150"
+                                       WidthRequest="105"
+                                       Source="{Binding CapaUrl}" />
+
                                 <Border.GestureRecognizers>
                                     <!--<TapGestureRecognizer Tapped="OnTappedBook"/>-->  <!-- Ainda não funciona, deixa comentado pq o app não compila se estiver no código -->
                                 </Border.GestureRecognizers>
                             </Border>
 
-                            <Label Text="{Binding Title}"
+                            <Label Text="{Binding Titulo}"
                                    FontFamily="Fraunces"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource FontColor}"

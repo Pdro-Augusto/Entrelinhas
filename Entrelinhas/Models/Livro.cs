@@ -1,6 +1,9 @@
-﻿public class Livro
+﻿using SQLite;
+
+public class Livro
 {
     // Identificação
+    [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
 
     // Dados da API
@@ -14,7 +17,7 @@
     public string? Genero { get; set; }
     public string? CapaUrl { get; set; }
 
-    // Dados do usuário (preenchidos depois)
+    // Dados do usuário
     public StatusLeitura Status { get; set; } = StatusLeitura.QueroLer;
     public int PaginaAtual { get; set; } = 0;
     public int Avaliacao { get; set; } = 0;
