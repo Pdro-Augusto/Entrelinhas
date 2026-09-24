@@ -1,65 +1,44 @@
-using Entrelinhas.Services;
+using Entrelinhas.ViewModels;
 
 namespace Entrelinhas.Views;
 
 [QueryProperty(nameof(Isbn), "isbn")]
-
 public partial class AddLivroPage : ContentPage
 {
-    private readonly ApiService _apiService;
-    private readonly DatabaseService _databaseService;
-    private Livro? _novoLivro;
-    private string? _isbn;
+    private readonly AddLivroViewModel _viewModel;
+
+    public AddLivroPage(AddLivroViewModel viewModel)
+    {
+        InitializeComponent();
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
+    }
+
     public string? Isbn
     {
-        get => _isbn;
-        set
-        {
-            _isbn = value;
-            if (!string.IsNullOrEmpty(value))
-                _ = BuscarLivroAsync(value);
-        }
-    }
-
-    public AddLivroPage(DatabaseService databaseService, ApiService apiService)
-	{
-		InitializeComponent();
-        _databaseService = databaseService;
-        _apiService = apiService;
-    }
-
-    private async Task BuscarLivroAsync(string isbn)
-    {
-        var livro = await _apiService.BuscarPorIsbnAsync(isbn);
-
-        if (livro == null)
-        {
-            await DisplayAlertAsync("Aviso", "Livro não encontrado.", "OK");
-            return;
-        }
-
-        _novoLivro = livro;
-
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            lbTitulo.Text = livro.Titulo;
-            lbAutor.Text = livro.Autor;
-            lbEditora.Text = livro.Editora;
-            lbAno.Text = livro.Ano?.ToString();
-            lbPaginas.Text = livro.Paginas?.ToString();
-            lbSinopse.Text = livro.Sinopse;
-
-            if (!string.IsNullOrEmpty(livro.CapaUrl))
-                imgCapa.Source = ImageSource.FromUri(new Uri(livro.CapaUrl.Replace("http://", "https://")));
-        });
+        get => _viewModel.Isbn;
+        set => _viewModel.Isbn = value; // repassa para o ViewModel
     }
 
     private async void btSalvar_Clicked(object sender, EventArgs e)
     {
-        if (_novoLivro == null) return;
+        if (_viewModel.NovoLivro == null) return;
 
-        await _databaseService.InserirLivroAsync(_novoLivro);
-        await Shell.Current.GoToAsync("..");
+        var resultado = await _viewModel.SalvarLivroAsync();
+
+        if (resultado > 0)
+        {
+            await DisplayAlertAsync("Sucesso", "Livro salvo!", "OK");
+            await Shell.Current.GoToAsync("..");
+        }
+        else if (resultado == -1)
+        {
+            await DisplayAlertAsync("Aviso", "Livro já existe na estante.", "OK");
+        }
+        else
+        {
+            await DisplayAlertAsync("Erro", "Não foi possível salvar o livro.", "OK");
+        }
     }
 
     private async void btCancelar_Clicked(object sender, EventArgs e)

@@ -60,13 +60,13 @@ public partial class EstantePage : ContentPage
 
     }
 
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
+    //protected override async void OnAppearing()
+    //{
+    //    base.OnAppearing();
 
-        var livros = await _databaseService.ObterTodosAsync();
-        BookList.ItemsSource = livros;
-    }
+    //    var livros = await _databaseService.ObterTodosAsync();
+    //    BookList.ItemsSource = livros;
+    //}
 
     //private async void OnTappedBook(object sender, TappedEventArgs e)
     //{

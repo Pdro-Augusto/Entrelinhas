@@ -4,6 +4,8 @@ using Microsoft.Maui.LifecycleEvents;
 using ZXing.Net.Maui.Controls;
 using Entrelinhas.Services;
 using Entrelinhas.Views;
+using Entrelinhas.ViewModels;
+
 
 #if ANDROID
 using Entrelinhas.Platforms.Android;
@@ -47,8 +49,14 @@ namespace Entrelinhas
                 .Services
                     .AddSingleton<DatabaseService>()
                     .AddSingleton<ApiService>()
+
                     .AddTransient<AddLivroPage>()
-                    .AddTransient<EstantePage>();
+                    .AddTransient<EstantePage>()
+                    .AddTransient<PesquisaPage>()
+
+                    .AddTransient<AddLivroViewModel>()
+                    .AddTransient<EstanteViewModel>()
+                    .AddTransient<PesquisaViewModel>();
 
 
             #if DEBUG

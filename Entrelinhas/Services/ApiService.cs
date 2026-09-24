@@ -47,7 +47,8 @@ namespace Entrelinhas.Services
                 {
                     Isbn = isbn,
                     Titulo = info.TryGetProperty("title", out var t) ? t.GetString() : null,
-                    Autor = info.TryGetProperty("authors", out var a) ? a[0].GetString() : null,
+                    Autor = info.TryGetProperty("authors", out var a) ? 
+                            string.Join(", ", a.EnumerateArray().Select(x => x.GetString())) : null,
                     Editora = info.TryGetProperty("publisher", out var p) ? p.GetString() : null,
                     Ano = ExtrairAno(info),
                     Paginas = info.TryGetProperty("pageCount", out var pg) ? pg.GetInt32() : null,
@@ -83,7 +84,7 @@ namespace Entrelinhas.Services
                     Isbn = isbn,
                     Titulo = livroData.TryGetProperty("title", out var t) ? t.GetString() : null,
                     Autor = livroData.TryGetProperty("authors", out var a) && a.GetArrayLength() > 0
-                        ? a[0].GetProperty("name").GetString() : null,
+                        ? string.Join(", ", a.EnumerateArray().Select(x => x.GetString())) : null,
                     Editora = livroData.TryGetProperty("publishers", out var p) && p.GetArrayLength() > 0
                         ? p[0].GetProperty("name").GetString() : null,
                     Ano = ExtrairAnoOpenLibrary(livroData),

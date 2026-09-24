@@ -29,7 +29,7 @@ public partial class ScannerPage : ContentPage
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 // Para o scanner enquanto navega
-                cameraBarcodeReaderView.IsDetecting = false;
+                cameraBarcodeReaderView?.IsDetecting = false;
 
                 // Navega para a página de detalhes, passando o código lido
                 await Shell.Current.GoToAsync($"addlivro?isbn={barcode.Value}");
@@ -42,10 +42,7 @@ public partial class ScannerPage : ContentPage
         base.OnAppearing();
 
         // Garante que a câmera está ligada quando a página aparece
-        if (cameraBarcodeReaderView != null)
-        {
-            cameraBarcodeReaderView.IsDetecting = true;
-        }
+        cameraBarcodeReaderView?.IsDetecting = true;
     }
 
     protected override void OnDisappearing()
@@ -53,9 +50,6 @@ public partial class ScannerPage : ContentPage
         base.OnDisappearing();
 
         // Desliga a detecção quando você sai da página
-        if (cameraBarcodeReaderView != null)
-        {
-            cameraBarcodeReaderView.IsDetecting = false;
-        }
+        cameraBarcodeReaderView?.IsDetecting = false;
     }
 }
