@@ -6,10 +6,10 @@
     <!-- Barra de pesquisa -->
     <Grid RowDefinitions="Auto, Auto, *" RowSpacing="15">
         <Grid Grid.Row="0"
-              Padding="20, 30, 20, 10"
+              Padding="20, 20, 20, 10"
               ColumnDefinitions="*, Auto"
               ColumnSpacing="10">
-            <Border StrokeShape="RoundRectangle 25"
+            <Border StrokeShape="RoundRectangle 10"
                     Stroke="{StaticResource MainColor}"
                     Background="{StaticResource MainColorAlpha}"
                     Padding="10,0"
@@ -19,7 +19,8 @@
                              x:Name="searchBook"
                              Placeholder="Procure por ISBN, Título, Autor..."
                              PlaceholderColor="{StaticResource SubFontAlpha}"
-                             BackgroundColor="Transparent"/>
+                             BackgroundColor="Transparent"
+                             TextColor="{StaticResource FontColor}"/>
                 </Grid>
             </Border>
 
@@ -27,7 +28,7 @@
                     Clicked="btSearch_Clicked"
                     Grid.Column="1"
                     ImageSource="pesquisa_alt.png"
-                    CornerRadius="80"
+                    CornerRadius="15"
                     BackgroundColor="{StaticResource MainColor}"/>
         </Grid>
 
@@ -39,40 +40,46 @@
                              Padding="40"
                              Spacing="15">
             <Image Source="pesquisa_content.png"
-                   HeightRequest="100"
+                   HeightRequest="95"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"/>
-            <Label Text="hmm, nada por aqui ainda..."
+            <Label Text="hmm, ainda estamos trabalhando nisso..."
                    TextColor="{StaticResource FontColor}"
                    FontFamily="Fraunces"
                    FontSize="18"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"/>
-            <Label>
+
+            <Label HorizontalOptions="Center">
                 <Label.FormattedText>
                     <FormattedString>
                         <Span Text="que tal adicionar o seu "
                               TextColor="{StaticResource SubFontAlpha}"
                               FontSize="15"
                               FontFamily="Karla"/>
-                        <Span Text="primeiro livro? :)"
+                        <Span Text="primeiro livro "
                               TextColor="{StaticResource SubFontAlpha}"
                               FontSize="15"
                               FontFamily="Karla"
                               FontAttributes="Bold"/>
+                        <Span Text="manualmente? :)"
+                              TextColor="{StaticResource SubFontAlpha}"
+                              FontSize="15"
+                              FontFamily="Karla"/>
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-
             <Button x:Name="btSearchByScanner"
-                    ImageSource="scanner_alt.png"
-                    Text="adicionar via scanner"
+                    ImageSource="pencil_icon.png"
+                    Text="cadastre manualmente"
+                    TextColor="{StaticResource BackgroundColor}"
                     BackgroundColor="{StaticResource MainColor}"
                     CornerRadius="15"
                     FontFamily="Karla"
                     FontSize="15"
                     FontAttributes="Bold"
-                    ContentLayout="Left, 10"/>
+                    ContentLayout="Left, 10"
+                    Margin="0, 10, 0 ,10"/>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

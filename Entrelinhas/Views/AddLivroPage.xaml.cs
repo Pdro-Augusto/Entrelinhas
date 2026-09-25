@@ -16,7 +16,7 @@ public partial class AddLivroPage : ContentPage
             _isbn = value;
             if (!string.IsNullOrWhiteSpace(_isbn))
             {
-                lbISBN.Text = $"ISBN: {_isbn}";
+                
                 _ = BuscarLivroAsync(_isbn);
             }
         }
@@ -25,8 +25,8 @@ public partial class AddLivroPage : ContentPage
     Livro NovoLivro = new Livro();
 
     public AddLivroPage()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         BindingContext = this;
     }
 
@@ -39,7 +39,6 @@ public partial class AddLivroPage : ContentPage
             var json = await http.GetStringAsync(url);
             var data = System.Text.Json.JsonDocument.Parse(json);
 
-            lbJson.Text = json;
 
             var items = data.RootElement.GetProperty("items");
             if (items.GetArrayLength() == 0)
@@ -71,10 +70,9 @@ public partial class AddLivroPage : ContentPage
                 lbTitulo.Text = NovoLivro.Titulo;
                 lbAutor.Text = NovoLivro.Autor;
                 lbEditora.Text = NovoLivro.Editora;
-                lbAno.Text = $"Ano: {NovoLivro.Ano?.ToString()}";
-                lbPaginas.Text = $"Páginas: {NovoLivro.Paginas?.ToString()}";
+                lbAno.Text = $"{NovoLivro.Ano?.ToString()}";
+                lbPaginas.Text = $"{NovoLivro.Paginas?.ToString()}";
                 lbSinopse.Text = NovoLivro.Sinopse;
-                lbJson.Text = NovoLivro.CapaUrl;
             });
         }
         catch (Exception ex)
@@ -91,5 +89,49 @@ public partial class AddLivroPage : ContentPage
     private void btSalvar_Clicked(object sender, EventArgs e)
     {
 
+    }
+
+    private Button latestButtonClicked = null;
+
+    private void ResetLastButton()
+    {
+        if (latestButtonClicked != null)
+        {
+            latestButtonClicked.BackgroundColor = Color.FromArgb("#10D85A30");
+            latestButtonClicked.TextColor = Color.FromArgb("#4A1B0C");
+        }
+    }
+
+    private void btWantRead_Clicked(object sender, EventArgs e)
+    {
+        ResetLastButton();
+
+        Button btLer = (Button)sender;
+        btLer.BackgroundColor = Color.FromArgb("#D85A30");
+        btLer.TextColor = Color.FromArgb("#EDEADE");
+
+        latestButtonClicked = btLer;
+    }
+
+    private void btReading_Clicked(object sender, EventArgs e)
+    {
+        ResetLastButton();
+
+        Button btLendo = (Button)sender;
+        btLendo.BackgroundColor = Color.FromArgb("#D85A30");
+        btLendo.TextColor = Color.FromArgb("#EDEADE");
+
+        latestButtonClicked = btLendo;
+    }
+
+    private void btRead_Clicked(object sender, EventArgs e)
+    {
+        ResetLastButton();
+
+        Button btLido = (Button)sender;
+        btLido.BackgroundColor = Color.FromArgb("#D85A30");
+        btLido.TextColor = Color.FromArgb("#EDEADE");
+
+        latestButtonClicked = btLido;
     }
 }

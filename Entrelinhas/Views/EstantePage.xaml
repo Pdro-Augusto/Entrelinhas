@@ -144,7 +144,7 @@
 
                 <Label Text="sua estante está vazia :("
                        FontFamily="Fraunces"
-                       FontAttributes="Bold, Italic"
+                       FontAttributes="Bold"
                        FontSize="18"
                        TextColor="{StaticResource FontColor}"
                        HorizontalTextAlignment="Center"/>
@@ -160,6 +160,7 @@
                         BackgroundColor="{StaticResource MainColor}"
                         TextColor="{StaticResource BackgroundColor}"
                         FontFamily="Karla"
+                        FontSize="15"
                         FontAttributes="Bold"
                         CornerRadius="15"
                         Margin="0, 10, 0, 0"/>

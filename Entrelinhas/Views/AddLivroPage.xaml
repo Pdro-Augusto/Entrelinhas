@@ -3,30 +3,260 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Entrelinhas.Views.AddLivroPage"
              Title="AddLivroPage"
-             Shell.TabBarIsVisible="False">
+             Shell.TabBarIsVisible="False"
+             Shell.NavBarIsVisible="False">
+    <ScrollView>
+        <VerticalStackLayout BackgroundColor="{StaticResource BackgroundColor}"
+                             Spacing="0">
+            <Grid HeightRequest="220"
+                  BackgroundColor="{StaticResource MainColor}">
+                <Border StrokeShape="RoundRectangle 10"
+                        WidthRequest="120"
+                        HeightRequest="170"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="0, 20, 0, 0">
+                    <Image x:Name="imgCapa"
+                           Aspect="AspectFill"/>
+                </Border>
 
-    <VerticalStackLayout Padding="10,20,10,20" Spacing="15" HorizontalOptions="Center">
-        
-        <Label Text="Adicionar Livro" FontAttributes="Bold" FontSize="30" />
-        
-        <Image x:Name="imgCapa" Source="book_icon.png" HeightRequest="200" WidthRequest="150" Aspect="AspectFill" />
-        <Label x:Name="lbTitulo" Text="Título:" FontSize="20" />
-        <Label x:Name="lbAutor" Text="Autor:" FontSize="20" />
-        <Label x:Name="lbEditora" Text="Editora:" FontSize="20" />
-        <Label x:Name="lbAno" Text="Ano:" FontSize="20" />
-        <Label x:Name="lbISBN" Text="ISBN:" FontSize="20" />
-        <Label x:Name="lbPaginas" Text="Páginas:" FontSize="20" />
-        <Label x:Name="lbSinopse" Text="Sinopse:" FontSize="20" MaxLines="5"/>
+                <Button x:Name="btCancelar"
+                        ImageSource="flecha_esquerda.png"
+                        Padding="0"
+                        Clicked="btCancelar_Clicked"
+                        CornerRadius="10"
+                        WidthRequest="10"
+                        HeightRequest="10"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Start"
+                        Margin="16, 16, 0, 0"
+                        BackgroundColor="{StaticResource SubFontAlpha}"/>
+            </Grid>
 
-        <HorizontalStackLayout Spacing="5">
-            <Button Text="btCancelar" Clicked="btCancelar_Clicked"  BackgroundColor="Gray" TextColor="White" />
-            <Button Text="btSalvar" Clicked="btSalvar_Clicked" BackgroundColor="Green" TextColor="White" />
-        </HorizontalStackLayout>
+            <VerticalStackLayout Padding="24, 20, 24, 30"
+                                 Spacing="18">
+                <VerticalStackLayout Spacing="12">
+                    <Label x:Name="lbTitulo"
+                           TextColor="{StaticResource FontColor}"
+                           FontFamily="Fraunces"
+                           FontSize="24"/>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span x:Name="lbAutor"
+                                      TextColor="{StaticResource SubFontColor}"
+                                      FontFamily="Karla"
+                                      FontAttributes="Bold"
+                                      FontSize="16"/>
+                                <Span Text=" — "
+                                      TextColor="{StaticResource SubFontColor}"
+                                      FontFamily="Karla"
+                                      FontSize="16"
+                                      FontAttributes="Bold"/>
+                                <Span x:Name="lbAno"
+                                      TextColor="{StaticResource SubFontColor}"
+                                      FontFamily="Karla"
+                                      FontAttributes="Bold"
+                                      FontSize="16"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
 
-        <ScrollView>
-            <Label x:Name="lbJson" Text="JSON: " FontSize="20" />
-        </ScrollView>
+                <Border StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{StaticResource MainColorAlpha}"
+                        Padding="10,4"
+                        HorizontalOptions="Start">
+                    <Label Text="Editora"
+                           x:Name="lbEditora"
+                           TextColor="{StaticResource FontColor}"
+                           FontFamily="Karla"
+                           FontSize="15"
+                           FontAttributes="Bold"/>
+                </Border>
 
-    </VerticalStackLayout>
-    
+                <BoxView HeightRequest="1" 
+                         Color="{StaticResource SubFontAlpha}"/>
+
+                <VerticalStackLayout>
+                    <Label Text="Status"
+                           TextColor="{StaticResource FontColor}"
+                           FontAttributes="Bold"
+                           FontFamily="Fraunces"
+                           FontSize="24"/>
+                    <HorizontalStackLayout Spacing="10">
+                        <Button x:Name="btWantRead"
+                                Text="Quero ler"
+                                TextColor="{StaticResource FontColor}"
+                                Clicked="btWantRead_Clicked"
+                                FontFamily="Karla"
+                                FontAttributes="Bold"
+                                FontSize="13"
+                                CornerRadius="15"
+                                HeightRequest="34"
+                                Padding="16, 5"
+                                HorizontalOptions="Fill"
+                                BorderWidth="1"
+                                BorderColor="{StaticResource MainColor}"
+                                BackgroundColor="{StaticResource MainColorAlpha}">
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroupList>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="Scale" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Property="Scale" Value="0.9"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOver"/>
+                                    </VisualStateGroup>
+                                </VisualStateGroupList>
+                            </VisualStateManager.VisualStateGroups>
+
+                        </Button>
+
+                        <Button x:Name="btReading"
+                                Text="Lendo"
+                                TextColor="{StaticResource FontColor}"
+                                Clicked="btReading_Clicked"
+                                FontFamily="Karla"
+                                FontAttributes="Bold"
+                                FontSize="13"
+                                CornerRadius="15"
+                                HeightRequest="25"
+                                Padding="16, 5"
+                                BorderWidth="1"
+                                BorderColor="{StaticResource MainColor}"
+                                BackgroundColor="{StaticResource MainColorAlpha}">
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroupList>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="Scale" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Property="Scale" Value="0.9"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOver"/>
+                                    </VisualStateGroup>
+                                </VisualStateGroupList>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
+
+                        <Button x:Name="btRead"
+                                Text="Lidos"
+                                TextColor="{StaticResource FontColor}"
+                                Clicked="btRead_Clicked"
+                                FontFamily="Karla"
+                                FontAttributes="Bold"
+                                FontSize="13"
+                                CornerRadius="15"
+                                HeightRequest="25"
+                                Padding="16, 5"
+                                BorderWidth="1"
+                                BorderColor="{StaticResource MainColor}"
+                                BackgroundColor="{StaticResource MainColorAlpha}">
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroupList>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="Scale" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+
+
+                                        <VisualState x:Name="Pressed">
+                                            <VisualState.Setters>
+                                                <Setter Property="Scale" Value="0.9"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOver"/>
+                                    </VisualStateGroup>
+                                </VisualStateGroupList>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Total de páginas:"
+                           TextColor="{StaticResource FontColor}"
+                           FontFamily="Karla"
+                           FontAttributes="Bold"
+                           FontSize="15"/>
+                    <Border StrokeShape="RoundRectangle 10"
+                            Stroke="{StaticResource SubFontAlpha}"
+                            StrokeThickness="1"
+                            Padding="14, 0"
+                            HeightRequest="30"
+                            WidthRequest="58"
+                            HorizontalOptions="Start">
+
+                        <Label x:Name="lbPaginas"
+                               BackgroundColor="Transparent"
+                               TextColor="{StaticResource SubFontColor}"
+                               FontFamily="Karla"
+                               VerticalTextAlignment="Center"/>
+                    </Border>
+
+
+
+                    <VerticalStackLayout>
+                        <Label Margin="0, 20, 0, 0"
+                               Text="Sinopse"
+                               TextColor="{StaticResource FontColor}"
+                               FontFamily="Fraunces"
+                               FontAttributes="Bold"
+                               FontSize="24"/>
+                        <Label x:Name="lbSinopse"
+                               Text="sinopse aparece aqui"
+                               FontFamily="Karla"
+                               FontSize="15"
+                               TextColor="{StaticResource SubFontColor}"
+                               MaxLines="9"
+                               LineBreakMode="TailTruncation"
+                               LineHeight="1.4"/>
+                    </VerticalStackLayout>
+
+                    <Button Margin="0, 109, 0, 0"
+                            x:Name="btSalvar"
+                            Text="adicionar à estante"
+                            Clicked="btSalvar_Clicked"
+                            BackgroundColor="Green"
+                            TextColor="{StaticResource BackgroundColor}"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            FontFamily="Karla"
+                            WidthRequest="250"
+                            HorizontalOptions="Center"/>
+                    <Label Text="ou"
+                           FontFamily="Karla"
+                           TextColor="{StaticResource FontColor}"
+                           FontSize="18"
+                           HorizontalOptions="Center"/>
+                    <Label Text="edite os dados manualmente"
+                           TextColor="{StaticResource FontColor}"
+                           FontFamily="Karla"
+                           FontSize="18"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
