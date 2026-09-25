@@ -1,13 +1,13 @@
+using Entrelinhas.ViewModels;
+
 namespace Entrelinhas.Views;
 
 [QueryProperty(nameof(Isbn), "isbn")]
-
 public partial class AddLivroPage : ContentPage
 {
-    private const string API_KEY = "AIzaSyAzAMQaYmO_4XMmexamwO3syWAIj2TxxoY";
+    private readonly AddLivroViewModel _viewModel;
 
-    private string? _isbn;
-    public string? Isbn
+    public AddLivroPage(AddLivroViewModel viewModel)
     {
         get => _isbn;
         set
@@ -21,6 +21,10 @@ public partial class AddLivroPage : ContentPage
             }
         }
     }
+        InitializeComponent();
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
+    }
 
     Livro NovoLivro = new Livro();
 
@@ -28,17 +32,17 @@ public partial class AddLivroPage : ContentPage
     {
         InitializeComponent();
         BindingContext = this;
+    public string? Isbn
+    {
+        get => _viewModel.Isbn;
+        set => _viewModel.Isbn = value; // repassa para o ViewModel
     }
 
-    private async Task BuscarLivroAsync(string isbn)
+    private async void btSalvar_Clicked(object sender, EventArgs e)
     {
-        try
-        {
-            using var http = new HttpClient();
-            var url = $"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={API_KEY}";
-            var json = await http.GetStringAsync(url);
-            var data = System.Text.Json.JsonDocument.Parse(json);
+        if (_viewModel.NovoLivro == null) return;
 
+        var resultado = await _viewModel.SalvarLivroAsync();
 
             var items = data.RootElement.GetProperty("items");
             if (items.GetArrayLength() == 0)
@@ -74,19 +78,22 @@ public partial class AddLivroPage : ContentPage
                 lbPaginas.Text = $"{NovoLivro.Paginas?.ToString()}";
                 lbSinopse.Text = NovoLivro.Sinopse;
             });
-        }
-        catch (Exception ex)
+        if (resultado > 0)
         {
-            await DisplayAlertAsync("Erro", ex.Message, "OK");
+            await DisplayAlertAsync("Sucesso", "Livro salvo!", "OK");
+            await Shell.Current.GoToAsync("..");
+        }
+        else if (resultado == -1)
+        {
+            await DisplayAlertAsync("Aviso", "Livro já existe na estante.", "OK");
+        }
+        else
+        {
+            await DisplayAlertAsync("Erro", "Não foi possível salvar o livro.", "OK");
         }
     }
 
-    private void btCancelar_Clicked(object sender, EventArgs e)
-    {
-
-    }
-
-    private void btSalvar_Clicked(object sender, EventArgs e)
+    private async void btCancelar_Clicked(object sender, EventArgs e)
     {
 
     }
@@ -133,5 +140,6 @@ public partial class AddLivroPage : ContentPage
         btLido.TextColor = Color.FromArgb("#EDEADE");
 
         latestButtonClicked = btLido;
+        await Shell.Current.GoToAsync("..");
     }
 }

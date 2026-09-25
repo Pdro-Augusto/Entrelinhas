@@ -15,12 +15,26 @@ namespace Entrelinhas.Services
 
         public async Task<int> InserirLivroAsync(Livro livro)
         {
+            if (await _db.Table<Livro>().Where(l => l.Isbn == livro.Isbn).FirstOrDefaultAsync() != null)
+            {
+                return -1; // Livro já existe
+            }
             return await _db.InsertAsync(livro);
         }
 
         public async Task<List<Livro>> ObterTodosAsync()
         {
-            return await _db.Table<Livro>().ToListAsync();
+            return await _db.Table<Livro>().Where(l => l.ListaDesejo == false).ToListAsync();
+        }
+
+        public async Task<List<Livro>> ObterListaDesejoAsync()
+        {
+            return await _db.Table<Livro>().Where(l => l.ListaDesejo == true).ToListAsync();
+        }
+
+        public async Task<Livro?> ObterPorIdAsync(int id)
+        {
+            return await _db.Table<Livro>().FirstOrDefaultAsync(l => l.Id == id);
         }
     }
 }
