@@ -14,7 +14,7 @@ public class Livro
     public string? Autor { get; set; }
     public string? Editora { get; set; }
     public int? Ano { get; set; }
-    public int? Paginas { get; set; }
+    public int? Paginas { get; set; } = 0;
     public string? Sinopse { get; set; }
     public string? Genero { get; set; }
     public string? CapaUrl { get; set; }
@@ -33,5 +33,5 @@ public enum StatusLeitura
 {
     QueroLer,
     Lendo,
-    Finalizado
+    Lido
 }

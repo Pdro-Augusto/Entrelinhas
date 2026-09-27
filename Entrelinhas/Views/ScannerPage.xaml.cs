@@ -12,7 +12,11 @@ public partial class ScannerPage : ContentPage
         {
             Formats = BarcodeFormats.OneDimensional, // Foca em códigos 1D (ISBN)
             AutoRotate = true,
-            Multiple = false
+            Multiple = false,
+            CameraResolutionSelector = availableResolutions => availableResolutions
+              .OrderBy(resolution => Math.Abs((resolution.Width * resolution.Height) - (1280 * 720)))
+              .ThenBy(resolution => Math.Abs(resolution.Width - 1280) + Math.Abs(resolution.Height - 720))
+              .First()
         };
 
         Unloaded += (sender, e) => { cameraBarcodeReaderView.Handler?.DisconnectHandler(); };

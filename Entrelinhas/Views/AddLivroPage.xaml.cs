@@ -2,98 +2,63 @@ using Entrelinhas.ViewModels;
 
 namespace Entrelinhas.Views;
 
-[QueryProperty(nameof(Isbn), "isbn")]
+[QueryProperty(nameof(Isbn), "isbn")] // Recebe o ISBN pela query string
 
 public partial class AddLivroPage : ContentPage
 {
-    private const string API_KEY = "AIzaSyAzAMQaYmO_4XMmexamwO3syWAIj2TxxoY";
+    private readonly AddLivroViewModel _viewModel;
 
-    private string? _isbn;
-    public string? Isbn
-    {
-        get => _isbn;
-        set
-        {
-            if (_isbn == value) return;
-            _isbn = value;
-            if (!string.IsNullOrWhiteSpace(_isbn))
-            {
-
-                _ = BuscarLivroAsync(_isbn);
-            }
-        }
-    }
-
-    Livro NovoLivro = new Livro();
-
-    public AddLivroPage()
+    private int? _statusLeitura;
+    public AddLivroPage(AddLivroViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = this;
-    }
+        _viewModel = viewModel;
+        BindingContext = _viewModel;
 
-    private async Task BuscarLivroAsync(string isbn)
-    {
-        try
+        _viewModel.LivroNaoEncontrado += async () =>
         {
-            using var http = new HttpClient();
-            var url = $"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={API_KEY}";
-            var json = await http.GetStringAsync(url);
-            var data = System.Text.Json.JsonDocument.Parse(json);
-
-
-            var items = data.RootElement.GetProperty("items");
-            if (items.GetArrayLength() == 0)
+            await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 await DisplayAlertAsync("Aviso", "Livro não encontrado.", "OK");
-                return;
-            }
-
-            var info = items[0].GetProperty("volumeInfo");
-
-            // Preenche os campos da tela (na thread principal)
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                NovoLivro.Isbn = info.TryGetProperty("isbn", out var i) ? i.GetString() : null;
-                NovoLivro.Titulo = info.TryGetProperty("title", out var t) ? t.GetString() : null;
-                NovoLivro.Autor = info.TryGetProperty("authors", out var a) ? a[0].GetString() : null;
-                NovoLivro.Editora = info.TryGetProperty("publisher", out var p) ? p.GetString() : null;
-                NovoLivro.Ano = info.TryGetProperty("publishedDate", out var d) ? int.Parse(d.GetString().Substring(0, 4)) : null;
-                NovoLivro.Paginas = info.TryGetProperty("pageCount", out var pg) ? pg.GetInt32() : null;
-                NovoLivro.Sinopse = info.TryGetProperty("description", out var s) ? s.GetString() : null;
-                NovoLivro.Genero = info.TryGetProperty("categories", out var c) ? c[0].GetString() : null;
-                NovoLivro.CapaUrl = info.TryGetProperty("imageLinks", out var img)
-                    && img.TryGetProperty("thumbnail", out var th)
-                    ? th.GetString()?.Replace("http://", "https://")
-                    : null;
-
-                // Atualiza os Labels/Entries da tela
-                imgCapa.Source = NovoLivro.CapaUrl;
-                lbTitulo.Text = NovoLivro.Titulo;
-                lbAutor.Text = NovoLivro.Autor;
-                lbEditora.Text = NovoLivro.Editora;
-                lbAno.Text = $"{NovoLivro.Ano?.ToString()}";
-                lbPaginas.Text = $"{NovoLivro.Paginas?.ToString()}";
-                lbSinopse.Text = NovoLivro.Sinopse;
+                await Shell.Current.GoToAsync("..");
             });
-        }
-        catch (Exception ex)
+        };
+    }
+
+    public string? Isbn
+    {
+        get => _viewModel.Isbn;
+        set => _viewModel.Isbn = value; // Repassa o ISBN para o ViewModel
+    }
+
+    private async void btCancelar_Clicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
+    private async void btSalvar_Clicked(object sender, EventArgs e)
+    {
+        if (_viewModel.NovoLivro == null) return;
+
+        var resultado = await _viewModel.SalvarLivroAsync(_statusLeitura);
+
+        if (resultado > 0)
         {
-            await DisplayAlertAsync("Erro", ex.Message, "OK");
+            await DisplayAlertAsync("Sucesso", "Livro salvo!", "OK");
+            await Shell.Current.GoToAsync("..");
         }
+        else if (resultado == -1)
+        {
+            await DisplayAlertAsync("Aviso", "Livro já existe na estante.", "OK");
+        }
+        else
+        {
+            await DisplayAlertAsync("Erro", "Não foi possível salvar o livro.", "OK");
+        }
+
     }
 
-    private void btCancelar_Clicked(object sender, EventArgs e)
-    {
-
-    }
-
-    private void btSalvar_Clicked(object sender, EventArgs e)
-    {
-
-    }
-
-    private Button latestButtonClicked = null;
+    private Button? latestButtonClicked = null;
 
     private void ResetLastButton()
     {
@@ -113,6 +78,7 @@ public partial class AddLivroPage : ContentPage
         btLer.TextColor = Color.FromArgb("#EDEADE");
 
         latestButtonClicked = btLer;
+        _statusLeitura = 0;
     }
 
     private void btReading_Clicked(object sender, EventArgs e)
@@ -124,6 +90,7 @@ public partial class AddLivroPage : ContentPage
         btLendo.TextColor = Color.FromArgb("#EDEADE");
 
         latestButtonClicked = btLendo;
+        _statusLeitura = 1;
     }
 
     private void btRead_Clicked(object sender, EventArgs e)
@@ -135,5 +102,6 @@ public partial class AddLivroPage : ContentPage
         btLido.TextColor = Color.FromArgb("#EDEADE");
 
         latestButtonClicked = btLido;
+        _statusLeitura = 2;
     }
 }

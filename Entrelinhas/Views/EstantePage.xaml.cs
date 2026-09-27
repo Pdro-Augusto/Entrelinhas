@@ -5,6 +5,7 @@ namespace Entrelinhas.Views;
 public partial class EstantePage : ContentPage
 {
     private readonly DatabaseService _databaseService;
+    private List<Livro> _cachedTodos = new();
     public EstantePage(DatabaseService databaseService)
 	{
 		InitializeComponent();
@@ -22,37 +23,29 @@ public partial class EstantePage : ContentPage
         }
     }
 
-    private void btAllBooks_Clicked(object sender, EventArgs e)
+    private void HighlightButton(Button btn)
     {
         ResetLastButton();
-
-        Button btTodos = (Button)sender;
-        btTodos.BackgroundColor = Color.FromArgb("#D85A30");
-        btTodos.TextColor = Color.FromArgb("#EDEADE");
-
-        latestButtonClicked = btTodos;
+        btn.BackgroundColor = Color.FromArgb("#D85A30");
+        btn.TextColor = Color.FromArgb("#EDEADE");
+        latestButtonClicked = btn;
+    }
+    private void btAllBooks_Clicked(object sender, EventArgs e)
+    {
+        HighlightButton((Button)sender);
+        ApplyFilter();
     }
 
     private void btReading_Clicked(object sender, EventArgs e)
     {
-        ResetLastButton();
-
-        Button btLendo = (Button)sender;
-        btLendo.BackgroundColor = Color.FromArgb("#D85A30");
-        btLendo.TextColor = Color.FromArgb("#EDEADE");
-
-        latestButtonClicked = btLendo;
+        HighlightButton((Button)sender);
+        ApplyFilter();
     }
 
     private void btRead_Clicked(object sender, EventArgs e)
     {
-        ResetLastButton();
-
-        Button btLido = (Button)sender;
-        btLido.BackgroundColor = Color.FromArgb("#D85A30");
-        btLido.TextColor = Color.FromArgb("#EDEADE");
-
-        latestButtonClicked = btLido;
+        HighlightButton((Button)sender);
+        ApplyFilter();
     }
 
     private void btAddNewBook_Clicked(object sender, EventArgs e)
@@ -60,13 +53,54 @@ public partial class EstantePage : ContentPage
 
     }
 
-    //protected override async void OnAppearing()
-    //{
-    //    base.OnAppearing();
+    private void ApplyFilter()
+    {
+        var todos = _cachedTodos ?? new List<Livro>();
+        List<Livro> livros;
 
-    //    var livros = await _databaseService.ObterTodosAsync();
-    //    BookList.ItemsSource = livros;
-    //}
+        if (latestButtonClicked == btReading)
+            livros = todos.Where(l => l.Status == StatusLeitura.Lendo).ToList();
+        else if (latestButtonClicked == btRead)
+            livros = todos.Where(l => l.Status == StatusLeitura.Lido).ToList();
+        else
+            livros = todos;
+
+        BookList.ItemsSource = livros;
+        EmptyState.IsVisible = livros.Count() == 0;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        _cachedTodos = await _databaseService.ObterTodosAsync() ?? new List<Livro>();
+
+        // Ensure a default filter is selected
+        if (latestButtonClicked == null)
+        {
+            HighlightButton(btAllBooks);
+        }
+
+        ApplyFilter();
+  
+
+        //if (todosLivros != null)
+        //{
+        //    BookList.ItemsSource = todosLivros;
+        //    if (todosLivros.Count > 0)
+        //    {
+        //        EmptyState.IsVisible = false;
+        //    }
+        //    else
+        //    {
+        //        EmptyState.IsVisible = true;
+        //    }
+        //}
+        //else
+        //{
+        //    EmptyState.IsVisible = true;
+        //}
+    }
 
     //private async void OnTappedBook(object sender, TappedEventArgs e)
     //{

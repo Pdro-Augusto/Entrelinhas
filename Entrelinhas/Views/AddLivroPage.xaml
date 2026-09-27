@@ -5,6 +5,8 @@
              Title="AddLivroPage"
              Shell.TabBarIsVisible="False"
              Shell.NavBarIsVisible="False">
+
+    <Grid>
     <ScrollView>
         <VerticalStackLayout BackgroundColor="{StaticResource BackgroundColor}"
                              Spacing="0">
@@ -17,6 +19,7 @@
                         HorizontalOptions="Center"
                         Margin="0, 20, 0, 0">
                     <Image x:Name="imgCapa"
+                           Source="{Binding NovoLivro.CapaUrl}"
                            Aspect="AspectFill"/>
                 </Border>
 
@@ -37,6 +40,7 @@
                                  Spacing="18">
                 <VerticalStackLayout Spacing="12">
                     <Label x:Name="lbTitulo"
+                           Text="{Binding NovoLivro.Titulo}"
                            TextColor="{StaticResource FontColor}"
                            FontFamily="Fraunces"
                            FontSize="24"/>
@@ -44,6 +48,7 @@
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span x:Name="lbAutor"
+                                      Text="{Binding NovoLivro.Autor, Converter={StaticResource NullToDefault}}"
                                       TextColor="{StaticResource SubFontColor}"
                                       FontFamily="Karla"
                                       FontAttributes="Bold"
@@ -54,6 +59,7 @@
                                       FontSize="16"
                                       FontAttributes="Bold"/>
                                 <Span x:Name="lbAno"
+                                      Text="{Binding NovoLivro.Ano, Converter={StaticResource NullToDefault}}"
                                       TextColor="{StaticResource SubFontColor}"
                                       FontFamily="Karla"
                                       FontAttributes="Bold"
@@ -67,8 +73,8 @@
                         BackgroundColor="{StaticResource MainColorAlpha}"
                         Padding="10,4"
                         HorizontalOptions="Start">
-                    <Label Text="Editora"
-                           x:Name="lbEditora"
+                    <Label x:Name="lbEditora"
+                           Text="{Binding NovoLivro.Editora, Converter={StaticResource NullToDefault}}"
                            TextColor="{StaticResource FontColor}"
                            FontFamily="Karla"
                            FontSize="15"
@@ -158,7 +164,7 @@
                         </Button>
 
                         <Button x:Name="btRead"
-                                Text="Lidos"
+                                Text="Lido"
                                 TextColor="{StaticResource FontColor}"
                                 Clicked="btRead_Clicked"
                                 FontFamily="Karla"
@@ -209,6 +215,7 @@
                             HorizontalOptions="Start">
 
                         <Label x:Name="lbPaginas"
+                               Text="{Binding NovoLivro.Paginas}"
                                BackgroundColor="Transparent"
                                TextColor="{StaticResource SubFontColor}"
                                FontFamily="Karla"
@@ -225,7 +232,7 @@
                                FontAttributes="Bold"
                                FontSize="24"/>
                         <Label x:Name="lbSinopse"
-                               Text="sinopse aparece aqui"
+                               Text="{Binding NovoLivro.Sinopse, Converter={StaticResource NullToDefault}}"
                                FontFamily="Karla"
                                FontSize="15"
                                TextColor="{StaticResource SubFontColor}"
@@ -259,4 +266,48 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
+
+        <!-- Overlay que cobre a tela inteira -->
+        <Grid IsVisible="{Binding IsLoading}"
+      BackgroundColor="#80000000"
+      Grid.RowSpan="99">
+
+            <!-- Card central com o indicador -->
+            <Border StrokeShape="RoundRectangle 16"
+            Stroke="Transparent"
+            BackgroundColor="{StaticResource FundoCard}"
+            Padding="30,25"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="150"
+            HeightRequest="150">
+
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                    Offset="0,4"
+                    Radius="12"
+                    Opacity="0.3" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="15"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
+
+                    <!-- Indicador circular -->
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               Color="{StaticResource CorPrimaria}"
+                               WidthRequest="50"
+                               HeightRequest="50"
+                               HorizontalOptions="Center" />
+
+                    <!-- Texto abaixo -->
+                    <Label Text="Carregando..."
+                   FontSize="14"
+                   FontFamily="Fraunces"
+                   TextColor="{StaticResource TextoSecundario}"
+                   HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
 </ContentPage>
