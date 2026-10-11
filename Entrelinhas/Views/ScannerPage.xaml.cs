@@ -47,6 +47,8 @@ public partial class ScannerPage : ContentPage
 
         // Garante que a câmera está ligada quando a página aparece
         cameraBarcodeReaderView?.IsDetecting = true;
+
+        Shell.SetTabBarBackgroundColor(this, Color.FromArgb("#80010101"));
     }
 
     protected override void OnDisappearing()
@@ -55,5 +57,7 @@ public partial class ScannerPage : ContentPage
 
         // Desliga a detecção quando você sai da página
         cameraBarcodeReaderView?.IsDetecting = false;
+
+        Shell.SetTabBarBackgroundColor(this, Color.FromArgb("#EDEADE"));
     }
 }

@@ -295,7 +295,7 @@
 
                     <!-- Indicador circular -->
                     <ActivityIndicator IsRunning="{Binding IsLoading}"
-                               Color="{StaticResource CorPrimaria}"
+                               Color="{StaticResource BackgroundColor}"
                                WidthRequest="50"
                                HeightRequest="50"
                                HorizontalOptions="Center" />
@@ -304,7 +304,7 @@
                     <Label Text="Carregando..."
                    FontSize="14"
                    FontFamily="Fraunces"
-                   TextColor="{StaticResource TextoSecundario}"
+                   TextColor="{StaticResource BackgroundColor}"
                    HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </Border>

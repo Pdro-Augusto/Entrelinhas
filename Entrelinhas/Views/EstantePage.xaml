@@ -193,7 +193,7 @@
                                        Source="{Binding CapaUrl}" />
 
                                 <Border.GestureRecognizers>
-                                    <!--<TapGestureRecognizer Tapped="OnTappedBook"/>-->  <!-- Ainda não funciona, deixa comentado pq o app não compila se estiver no código -->
+                                    <TapGestureRecognizer Tapped="OnLivroTocado"/>
                                 </Border.GestureRecognizers>
                             </Border>
 

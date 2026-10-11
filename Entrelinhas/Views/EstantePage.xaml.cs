@@ -102,11 +102,10 @@ public partial class EstantePage : ContentPage
         //}
     }
 
-    //private async void OnTappedBook(object sender, TappedEventArgs e)
-    //{
-    //    if (e.Parameter is Livro livro)
-    //    {
-    //        await Shell.Current.GoToAsync($"detalhelivro?id={livro.Id}");
-    //    }
-    //}
+    private async void OnLivroTocado(object? sender, TappedEventArgs e)
+    {
+        if ((sender as BindableObject)?.BindingContext is not Livro livro) return;
+
+        await Shell.Current.GoToAsync($"detalhelivro?livroId={livro.Id}");
+    }
 }
