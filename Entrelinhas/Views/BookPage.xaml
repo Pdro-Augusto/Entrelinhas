@@ -4,8 +4,12 @@
              xmlns:models="clr-namespace:Entrelinhas.Models"
              x:Class="Entrelinhas.Views.BookPage"
              BackgroundColor="{StaticResource BackgroundColor}"
+             xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
+             droid:NavigationBar.Color="{StaticResource BackgroundColor}"
+             droid:NavigationBar.Style="DarkContent"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
+    
     <Grid RowDefinitions="Auto, Auto, Auto, *">
         <Grid Grid.Row="0"
               Padding="20, 16, 20, 0"

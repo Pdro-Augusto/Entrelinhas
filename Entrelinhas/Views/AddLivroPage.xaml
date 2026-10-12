@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Entrelinhas.Views.AddLivroPage"
              Title="AddLivroPage"
+             xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
+             droid:NavigationBar.Color="{StaticResource BackgroundColor}"
+             droid:NavigationBar.Style="DarkContent"
              Shell.TabBarIsVisible="False"
              Shell.NavBarIsVisible="False">
 
