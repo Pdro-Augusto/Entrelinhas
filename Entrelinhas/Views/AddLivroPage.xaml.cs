@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Entrelinhas.ViewModels;
 
 namespace Entrelinhas.Views;
@@ -9,6 +11,7 @@ public partial class AddLivroPage : ContentPage
     private readonly AddLivroViewModel _viewModel;
 
     private int? _statusLeitura;
+    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
     public AddLivroPage(AddLivroViewModel viewModel)
     {
         InitializeComponent();
@@ -19,8 +22,8 @@ public partial class AddLivroPage : ContentPage
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                await DisplayAlertAsync("Aviso", "Livro não encontrado.", "OK");
-                await Shell.Current.GoToAsync("..");
+                var toast = Toast.Make("Livro não encontrado.", ToastDuration.Short, 14);
+                await toast.Show(cancellationTokenSource.Token);
             });
         };
     }
@@ -44,16 +47,19 @@ public partial class AddLivroPage : ContentPage
 
         if (resultado > 0)
         {
-            await DisplayAlertAsync("Sucesso", "Livro salvo!", "OK");
+            var toast = Toast.Make("Livro salvo!", ToastDuration.Short, 14);
+            await toast.Show(cancellationTokenSource.Token);
             await Shell.Current.GoToAsync("..");
         }
         else if (resultado == -1)
         {
-            await DisplayAlertAsync("Aviso", "Livro já existe na estante.", "OK");
+            var toast = Toast.Make("Livro já existe na estante.", ToastDuration.Short, 14);
+            await toast.Show(cancellationTokenSource.Token);
         }
         else
         {
-            await DisplayAlertAsync("Erro", "Não foi possível salvar o livro.", "OK");
+            var toast = Toast.Make("Não foi possível salvar o livro.", ToastDuration.Short, 14);
+            await toast.Show(cancellationTokenSource.Token);
         }
 
     }

@@ -53,10 +53,12 @@ namespace Entrelinhas
                     .AddTransient<AddLivroPage>()
                     .AddTransient<EstantePage>()
                     .AddTransient<PesquisaPage>()
+                    .AddTransient<BookPage>()
 
                     .AddTransient<AddLivroViewModel>()
                     .AddTransient<EstanteViewModel>()
-                    .AddTransient<PesquisaViewModel>();
+                    .AddTransient<PesquisaViewModel>()
+                    .AddTransient<BookViewModel>();
 
 
             #if DEBUG

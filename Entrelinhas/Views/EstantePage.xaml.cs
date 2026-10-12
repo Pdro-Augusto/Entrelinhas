@@ -1,16 +1,16 @@
-using Entrelinhas.Services;
+using Entrelinhas.ViewModels;
 
 namespace Entrelinhas.Views;
 
 public partial class EstantePage : ContentPage
 {
-    private readonly DatabaseService _databaseService;
-    private List<Livro> _cachedTodos = new();
-    public EstantePage(DatabaseService databaseService)
+    private readonly EstanteViewModel _viewModel;
+    public EstantePage(EstanteViewModel viewModel)
 	{
 		InitializeComponent();
-		_databaseService = databaseService;
-	}
+		_viewModel = viewModel;
+        BindingContext = _viewModel;
+    }
 
     private Button? latestButtonClicked = null;
 
@@ -55,7 +55,7 @@ public partial class EstantePage : ContentPage
 
     private void ApplyFilter()
     {
-        var todos = _cachedTodos ?? new List<Livro>();
+        var todos = _viewModel.CachedTodos ?? new List<Livro>();
         List<Livro> livros;
 
         if (latestButtonClicked == btReading)
@@ -73,7 +73,7 @@ public partial class EstantePage : ContentPage
     {
         base.OnAppearing();
 
-        _cachedTodos = await _databaseService.ObterTodosAsync() ?? new List<Livro>();
+        await _viewModel.LoadLivrosAsync();
 
         // Ensure a default filter is selected
         if (latestButtonClicked == null)
@@ -82,30 +82,12 @@ public partial class EstantePage : ContentPage
         }
 
         ApplyFilter();
-  
-
-        //if (todosLivros != null)
-        //{
-        //    BookList.ItemsSource = todosLivros;
-        //    if (todosLivros.Count > 0)
-        //    {
-        //        EmptyState.IsVisible = false;
-        //    }
-        //    else
-        //    {
-        //        EmptyState.IsVisible = true;
-        //    }
-        //}
-        //else
-        //{
-        //    EmptyState.IsVisible = true;
-        //}
     }
 
     private async void OnLivroTocado(object? sender, TappedEventArgs e)
     {
         if ((sender as BindableObject)?.BindingContext is not Livro livro) return;
-
+        
         await Shell.Current.GoToAsync($"detalhelivro?livroId={livro.Id}");
     }
 }

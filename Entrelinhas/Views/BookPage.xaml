@@ -32,11 +32,13 @@
                              Padding="24, 14, 24, 14"
                              Spacing="3">
             <Label x:Name="lbTitulo"
+                   Text="{Binding Livro.Titulo}"
                    FontFamily="Fraunces"
                    FontAttributes="Bold"
                    FontSize="24"
                    TextColor="{StaticResource FontColor}"/>
             <Label x:Name="lbAutorAno"
+                   Text="{Binding Livro.Autor}"
                    FontFamily="Karla"
                    FontSize="12"
                    TextColor="{StaticResource SubFontAlpha}"/>
