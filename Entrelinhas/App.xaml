@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:NullToDefaultConverter x:Key="NullToDefault" />
+            <converters:UrlToImageConverter x:Key="UrlToImageConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

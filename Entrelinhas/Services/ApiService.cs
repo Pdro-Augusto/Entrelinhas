@@ -42,7 +42,7 @@ namespace Entrelinhas.Services
             return null;
         }
 
-        // ===== API 1: Google Books =====
+        // ===== API 1: Google Books - Busca por ISBN =====
         private async Task<Livro?> BuscarNoGoogleBooksAsync(string isbn)
         {
             try
@@ -79,11 +79,12 @@ namespace Entrelinhas.Services
             }
         }
 
+        // ===== API 1: Google Books - Busca por Palavra-Chave =====
         private async Task BuscarNoGoogleBooksPorPalavraChaveAsync(string palavraChave, ObservableCollection<Livro> livros)
         {
             try
             {
-                var url = $"https://www.googleapis.com/books/v1/volumes?q={Uri.EscapeDataString(palavraChave)}&maxResults=40key={GOOGLE_API_KEY}";
+                var url = $"https://www.googleapis.com/books/v1/volumes?q={Uri.EscapeDataString(palavraChave)}&maxResults=20&key={GOOGLE_API_KEY}";
                 var json = await _http.GetStringAsync(url);
                 var data = JsonDocument.Parse(json);
                 if (!data.RootElement.TryGetProperty("items", out var items)) return;
@@ -116,7 +117,7 @@ namespace Entrelinhas.Services
             }
         }
 
-        // ===== API 2: Open Library =====
+        // ===== API 2: Open Library - Busca por ISBN =====
         private async Task<Livro?> BuscarNaOpenLibraryAsync(string isbn)
         {
             try
@@ -149,11 +150,12 @@ namespace Entrelinhas.Services
             }
         }
 
+        // ===== API 2: Open Library - Busca por Palavra-Chave =====
         private async Task BuscarNaOpenLibraryPorPalavraChaveAsync(string palavraChave, ObservableCollection<Livro> livros)
         {
             try
             {
-                var url = $"https://openlibrary.org/search.json?q={Uri.EscapeDataString(palavraChave)}&limit=40&fields=key,title,author_name,first_publish_year,cover_i,isbn,number_of_pages_median"; ;
+                var url = $"https://openlibrary.org/search.json?q={Uri.EscapeDataString(palavraChave)}&limit=20&fields=key,title,author_name,first_publish_year,cover_i,isbn,number_of_pages_median"; ;
                 var json = await _http.GetStringAsync(url);
                 var data = JsonDocument.Parse(json);
                 if (!data.RootElement.TryGetProperty("docs", out var docs)) return;

@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Core.Platform;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Entrelinhas.ViewModels;
@@ -7,17 +8,21 @@ namespace Entrelinhas.Views;
 public partial class PesquisaPage : ContentPage
 {
 	private readonly PesquisaViewModel _viewModel;
+    private readonly AddLivroViewModel _addLivroViewModel;
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-    public PesquisaPage(PesquisaViewModel viewModel)
+    public PesquisaPage(PesquisaViewModel viewModel, AddLivroViewModel addLivroViewModel)
 	{
 		InitializeComponent();
 		_viewModel = viewModel;
+		_addLivroViewModel = addLivroViewModel;
 		BindingContext = _viewModel;
     }
 
     private async void btSearch_Clicked(object sender, EventArgs e)
     {
-		var palavraChave = searchBook.Text;
+        await searchBook.HideKeyboardAsync(CancellationToken.None);
+
+        var palavraChave = searchBook.Text;
 
 		if (string.IsNullOrWhiteSpace(palavraChave))
 		{
@@ -51,9 +56,18 @@ public partial class PesquisaPage : ContentPage
 
     private async void OnLivroTocado(object? sender, TappedEventArgs e)
     {
-        //if ((sender as BindableObject)?.BindingContext is not Livro livro) return;
+        if ((sender as BindableObject)?.BindingContext is not Livro livro) return;
 
-        //await Shell.Current.GoToAsync($"detalhelivro?livroId={livro.Id}");
+        try
+        {
+            _viewModel.IsLoading = true;
+            var addLivroPage = new AddLivroPage(_addLivroViewModel, livro);
+            await Shell.Current.Navigation.PushAsync(addLivroPage);
+        }
+        finally
+        {
+            _viewModel.IsLoading = false;
+        }
     }
 
 }

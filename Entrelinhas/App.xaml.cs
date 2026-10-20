@@ -7,9 +7,6 @@ namespace Entrelinhas
         public App()
         {
             InitializeComponent();
-
-            Routing.RegisterRoute("addlivro", typeof(Views.AddLivroPage));
-            Routing.RegisterRoute("estante", typeof(Views.EstantePage));
         }
 
 

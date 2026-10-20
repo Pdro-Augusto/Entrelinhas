@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SQLite;
 
 namespace Entrelinhas.Models
 {
     public class Anotacao
     {
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public int LivroId { get; set; }
         public string Texto { get; set; } = string.Empty;

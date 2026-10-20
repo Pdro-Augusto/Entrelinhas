@@ -15,29 +15,29 @@
     <Shell.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{StaticResource BackgroundColor}" StatusBarStyle="DarkContent" />
     </Shell.Behaviors>
-    
+
     <TabBar>
-        <Tab Title=""
+        <Tab Title="" Route="estante"
              Icon="estante_icon.png">
             <ShellContent ContentTemplate="{DataTemplate views:EstantePage}"/>
         </Tab>
 
-        <Tab Title=""
+        <Tab Title="" Route="pesquisa"
              Icon="pesquisa_icon.png">
             <ShellContent ContentTemplate="{DataTemplate views:PesquisaPage}"/>
         </Tab>
 
-        <Tab Title=""
+        <Tab Title="" Route="scanner"
              Icon="scanner_icon.png">
             <ShellContent ContentTemplate="{DataTemplate views:ScannerPage}"/>
         </Tab>
 
-        <Tab Title=""
+        <Tab Title="" Route="stats"
              Icon="stats_icon.png">
             <ShellContent ContentTemplate="{DataTemplate views:StatsPage}"/>
         </Tab>
 
-        <Tab Title=""
+        <Tab Title="" Route="user"
              Icon="user_icon.png">
             <ShellContent ContentTemplate="{DataTemplate views:UserPage}"/>
         </Tab>

@@ -59,9 +59,9 @@ namespace Entrelinhas.Services
             return await _db.InsertAsync(nota);
         }
 
-        public async Task<int> ExcluirAnotacaoAsync(Anotacao nota)
+        public async Task ExcluirAnotacaoAsync(int id)
         {
-            return await _db.DeleteAsync(nota);
+            await _db.DeleteAsync<Anotacao>(id);
         }
 
         public async Task ExcluirLivroAsync(int livroId)

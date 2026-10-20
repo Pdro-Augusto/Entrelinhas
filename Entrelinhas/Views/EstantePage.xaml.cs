@@ -48,9 +48,9 @@ public partial class EstantePage : ContentPage
         ApplyFilter();
     }
 
-    private void btAddNewBook_Clicked(object sender, EventArgs e)
+    private async void btAddNewBook_Clicked(object sender, EventArgs e)
     {
-
+        await Shell.Current.GoToAsync("//scanner");
     }
 
     private void ApplyFilter()
@@ -87,7 +87,6 @@ public partial class EstantePage : ContentPage
     private async void OnLivroTocado(object? sender, TappedEventArgs e)
     {
         if ((sender as BindableObject)?.BindingContext is not Livro livro) return;
-        
-        await Shell.Current.GoToAsync($"detalhelivro?livroId={livro.Id}");
+            await Shell.Current.GoToAsync($"detalhelivro?livroId={livro.Id}");
     }
 }

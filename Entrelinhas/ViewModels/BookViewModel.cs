@@ -53,10 +53,18 @@ public partial class BookViewModel : BaseViewModel
     }
 
     // Grava no banco o que mudou no livro (progresso, status)
-    public async Task SalvarLivroAsync()
+    public async Task AtualizarLivroAsync()
     {
         if (Livro is null) return;
-        await _databaseService.AtualizarLivroAsync(Livro);
+        try
+        {
+            IsLoading = true;
+            await _databaseService.AtualizarLivroAsync(Livro);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     public async Task AdicionarAnotacaoAsync(Anotacao nota)
@@ -67,7 +75,7 @@ public partial class BookViewModel : BaseViewModel
 
     public async Task ExcluirAnotacaoAsync(Anotacao nota)
     {
-        await _databaseService.ExcluirAnotacaoAsync(nota);
+        await _databaseService.ExcluirAnotacaoAsync(nota.Id);
         Anotacoes.Remove(nota);
     }
 

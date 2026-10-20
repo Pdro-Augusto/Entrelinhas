@@ -7,6 +7,7 @@ namespace Entrelinhas
         public AppShell()
         {
             InitializeComponent();
+            Routing.RegisterRoute("addlivro", typeof(AddLivroPage));
             Routing.RegisterRoute("detalhelivro", typeof(BookPage));
         }
     }

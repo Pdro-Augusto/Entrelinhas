@@ -5,27 +5,22 @@ using Entrelinhas.ViewModels;
 namespace Entrelinhas.Views;
 
 [QueryProperty(nameof(Isbn), "isbn")] // Recebe o ISBN pela query string
-
 public partial class AddLivroPage : ContentPage
 {
     private readonly AddLivroViewModel _viewModel;
 
     private int? _statusLeitura;
-    CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+    private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
     public AddLivroPage(AddLivroViewModel viewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = _viewModel;
+    }
 
-        _viewModel.LivroNaoEncontrado += async () =>
-        {
-            await MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                var toast = Toast.Make("Livro não encontrado.", ToastDuration.Short, 14);
-                await toast.Show(cancellationTokenSource.Token);
-            });
-        };
+    public AddLivroPage(AddLivroViewModel viewModel, Livro livro) : this(viewModel)
+    {
+        _viewModel.NovoLivro = livro;
     }
 
     public string? Isbn
@@ -36,7 +31,7 @@ public partial class AddLivroPage : ContentPage
 
     private async void btCancelar_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync("//scanner");
     }
 
     private async void btSalvar_Clicked(object sender, EventArgs e)
@@ -109,5 +104,29 @@ public partial class AddLivroPage : ContentPage
 
         latestButtonClicked = btLido;
         _statusLeitura = 2;
+    }
+
+    private async void OnLivroNaoEncontrado()
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            var toast = Toast.Make("Livro não encontrado.", ToastDuration.Short, 14);
+            await toast.Show(cancellationTokenSource.Token);
+            await Shell.Current.GoToAsync("..");
+        });
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        _viewModel.LivroNaoEncontrado -= OnLivroNaoEncontrado;
+        _viewModel.LivroNaoEncontrado += OnLivroNaoEncontrado;
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _viewModel.LivroNaoEncontrado -= OnLivroNaoEncontrado;
     }
 }

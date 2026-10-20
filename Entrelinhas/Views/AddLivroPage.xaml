@@ -24,7 +24,7 @@
                             HorizontalOptions="Center"
                             Margin="0, 20, 0, 0">
                         <Image x:Name="imgCapa"
-                               Source="{Binding NovoLivro.CapaUrl}"
+                               Source="{Binding NovoLivro.CapaUrl, Converter={StaticResource UrlToImageConverter}}"
                                Aspect="AspectFill"/>
                     </Border>
 

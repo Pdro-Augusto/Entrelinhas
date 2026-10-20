@@ -1,6 +1,10 @@
 using System.Text.RegularExpressions;
 using Entrelinhas.Models;
 using Entrelinhas.ViewModels;
+using CommunityToolkit.Maui.Core.Platform;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Alerts;
+using System.Data;
 
 namespace Entrelinhas.Views;
 
@@ -8,6 +12,7 @@ namespace Entrelinhas.Views;
 public partial class BookPage : ContentPage
 {
     private readonly BookViewModel _viewModel;
+    private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
     public BookPage(BookViewModel bookViewModel)
     {
@@ -20,6 +25,12 @@ public partial class BookPage : ContentPage
             lbSemAnotacoes.IsVisible = _viewModel.Anotacoes.Count == 0;
 
         MostrarAba(0);
+    }
+
+    public Livro? livro
+    {
+        get => _viewModel.Livro;
+        set => _viewModel.Livro = value; // Repassa o ID do livro para o ViewModel
     }
 
     public int? LivroId
@@ -42,12 +53,8 @@ public partial class BookPage : ContentPage
             return;
         }
 
-        PreencherTela(_viewModel.Livro);
-    }
-
-    private void PreencherTela(Livro livro)
-    {
-        imgCapa.Source = livro.CapaUrl?.Replace("http://", "https://");
+        AtualizarProgresso();
+        AtualizarStatus();
     }
 
     // ---------- ABAS ----------
@@ -81,8 +88,10 @@ public partial class BookPage : ContentPage
 
     // ---------- PROGRESSO E STATUS ----------
 
-    private void AtualizarProgresso(Livro livro)
+    private void AtualizarProgresso()
     {
+        if (livro is null) return;
+        
         int total = livro.Paginas ?? 0;
 
         if (total <= 0)
@@ -96,8 +105,11 @@ public partial class BookPage : ContentPage
         lbProgresso.Text = $"{livro.PaginasLidas} de {total} páginas";
     }
 
-    private void AtualizarStatus(Livro livro) =>
+    private void AtualizarStatus()
+    {
+        if (livro is null) return;
         lbStatus.Text = NomeStatus(livro.Status);
+    }
 
     // Transforma o nome do enum em texto legível: "QueroLer" -> "Quero ler"
     private static string NomeStatus(StatusLeitura status)
@@ -108,7 +120,7 @@ public partial class BookPage : ContentPage
 
     private async void OnAtualizarProgressoClicado(object? sender, EventArgs e)
     {
-        var livro = _viewModel.Livro;
+        await entryPaginasLidas.HideKeyboardAsync(CancellationToken.None);
         if (livro is null) return;
 
         if (!int.TryParse(entryPaginasLidas.Text, out var paginas) || paginas < 0)
@@ -125,15 +137,16 @@ public partial class BookPage : ContentPage
         }
 
         livro.PaginasLidas = paginas;
-        await _viewModel.SalvarLivroAsync();
+        await _viewModel.AtualizarLivroAsync();
+        var toast = Toast.Make("Páginas atualizadas!", ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
 
-        AtualizarProgresso(livro);
+        AtualizarProgresso();
         entryPaginasLidas.Text = string.Empty;
     }
 
     private async void OnStatusTocado(object? sender, TappedEventArgs e)
     {
-        var livro = _viewModel.Livro;
         if (livro is null) return;
 
         var valores = Enum.GetValues<StatusLeitura>();
@@ -153,16 +166,18 @@ public partial class BookPage : ContentPage
             }
         }
 
-        await _viewModel.SalvarLivroAsync();
+        await _viewModel.AtualizarLivroAsync();
+        var toast = Toast.Make("Status atualizado!", ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
 
-        AtualizarStatus(livro);
+        AtualizarStatus();
     }
 
     // ---------- ANOTAÇÕES ----------
 
     private async void OnSalvarAnotacaoClicado(object? sender, EventArgs e)
     {
-        var livro = _viewModel.Livro;
+        await edtAnotacao.HideKeyboardAsync(CancellationToken.None);
         if (livro is null) return;
 
         var texto = edtAnotacao.Text?.Trim();
@@ -183,6 +198,8 @@ public partial class BookPage : ContentPage
         };
 
         await _viewModel.AdicionarAnotacaoAsync(nota);
+        var toast = Toast.Make("Anotação adicionada!", ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
 
         edtAnotacao.Text = string.Empty;
         entryPaginaNota.Text = string.Empty;
@@ -197,6 +214,8 @@ public partial class BookPage : ContentPage
         if (!confirmou) return;
 
         await _viewModel.ExcluirAnotacaoAsync(nota);
+        var toast = Toast.Make("Anotação excluída!", ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
     }
 
     // ---------- MENU E NAVEGAÇÃO ----------
@@ -214,11 +233,6 @@ public partial class BookPage : ContentPage
         if (!confirmou) return;
 
         await _viewModel.ExcluirLivroAsync();
-        await Shell.Current.GoToAsync("..");
-    }
-
-    private async void OnVoltarClicado(object? sender, TappedEventArgs e)
-    {
         await Shell.Current.GoToAsync("..");
     }
 

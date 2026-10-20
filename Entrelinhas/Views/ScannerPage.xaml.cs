@@ -60,4 +60,16 @@ public partial class ScannerPage : ContentPage
 
         Shell.SetTabBarBackgroundColor(this, Color.FromArgb("#EDEADE"));
     }
+
+    protected override bool OnBackButtonPressed()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Shell.Current.GoToAsync("//estante");
+        });
+
+        // Retorna true para avisar ao Android que você já tratou o evento
+        // e evitar que o aplicativo seja fechado.
+        return true;
+    }
 }
