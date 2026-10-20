@@ -31,7 +31,7 @@ public partial class AddLivroPage : ContentPage
 
     private async void btCancelar_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//scanner");
+        await Shell.Current.GoToAsync("..");
     }
 
     private async void btSalvar_Clicked(object sender, EventArgs e)
