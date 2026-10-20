@@ -9,19 +9,24 @@
              droid:NavigationBar.Style="DarkContent"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
-    
+
     <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <Button x:Name="btVolta"
+            ImageSource="flecha_esquerda.png"
+            Padding="0"
+            Clicked="btVolta_Clicked"
+            CornerRadius="10"
+            WidthRequest="10"
+            HeightRequest="10"
+            VerticalOptions="Start"
+            HorizontalOptions="Start"
+            Margin="16, 16, 0, 0"
+            BackgroundColor="{StaticResource MainColor}"/>
+        
         <Grid Grid.Row="0"
               Padding="20, 16, 20, 0"
               ColumnDefinitions="Auto, *, Auto">
-            <Label Grid.Column="0"
-                   Text=""
-                   FontSize="24"
-                   TextColor="{StaticResource FontColor}">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnVoltarClicado"/>
-                </Label.GestureRecognizers>
-            </Label>
 
             <Label Grid.Column="2"
                    FontSize="20"
@@ -48,47 +53,48 @@
                    TextColor="{StaticResource SubFontAlpha}"/>
         </VerticalStackLayout>
 
-        <Grid Grid.Row="2"
-              Padding="24, 0">
-            <BoxView HeightRequest="0.5"
-                     VerticalOptions="End"
-                     Color="{StaticResource SubFontAlpha}"/>
-            <HorizontalStackLayout Spacing="24">
-                <VerticalStackLayout Spacing="6">
-                    <Label x:Name="lbTabProgresso"
-                           Text="Progresso"
-                           FontFamily="Karla"
-                           FontSize="14"/>
-                    <BoxView x:Name="ulProgresso"
-                             HeightRequest="2"/>
-                    <VerticalStackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnAbaProgressoClicado"/>
-                    </VerticalStackLayout.GestureRecognizers>
+        <Grid Grid.Row="2" Padding="12,0">
+            <BoxView HeightRequest="0.5" VerticalOptions="End"
+             Color="{StaticResource SubFontAlpha}" />
+            <HorizontalStackLayout Spacing="0">
+
+                <VerticalStackLayout>
+                    <Label x:Name="lbTabProgresso" Text="Progresso"
+                   FontFamily="Karla" FontSize="14" FontAttributes="Bold"
+                   Padding="12,12,12,8"
+                   TextColor="{StaticResource MainColor}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAbaProgressoClicado" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <BoxView x:Name="ulProgresso" HeightRequest="2"
+                     Color="{StaticResource MainColor}" />
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Spacing="6">
-                    <Label x:Name="lbTabAnotacoes"
-                           Text="Anotações"
-                           FontFamily="Karla"
-                           FontSize="14"/>
-                    <BoxView x:Name="ulAnotacoes"
-                             HeightRequest="2"/>
-                    <VerticalStackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnAbaAnotacoesClicado"/>
-                    </VerticalStackLayout.GestureRecognizers>
+                <VerticalStackLayout>
+                    <Label x:Name="lbTabAnotacoes" Text="Anotações"
+                   FontFamily="Karla" FontSize="14"
+                   Padding="12,12,12,8"
+                   TextColor="{StaticResource SubFontAlpha}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAbaAnotacoesClicado" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <BoxView x:Name="ulAnotacoes" HeightRequest="2" Color="Transparent" />
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Spacing="6">
-                    <Label x:Name="lbTabSobre"
-                           Text="Sobre"
-                           FontFamily="Karla"
-                           FontSize="14"/>
-                    <BoxView x:Name="ulSobre"
-                             HeightRequest="2"/>
-                    <VerticalStackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnAbaSobreClicado"/>
-                    </VerticalStackLayout.GestureRecognizers>
+                <VerticalStackLayout>
+                    <Label x:Name="lbTabSobre" Text="Sobre"
+                   FontFamily="Karla" FontSize="14"
+                   Padding="12,12,12,8"
+                   TextColor="{StaticResource SubFontAlpha}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAbaSobreClicado" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <BoxView x:Name="ulSobre" HeightRequest="2" Color="Transparent" />
                 </VerticalStackLayout>
+
             </HorizontalStackLayout>
         </Grid>
 
@@ -101,7 +107,7 @@
                         <Border Grid.Column="0" StrokeShape="RoundRectangle 8"
                                 WidthRequest="70" HeightRequest="100"
                                 BackgroundColor="{StaticResource MainColorAlpha}">
-                            <Image x:Name="imgCapa" Aspect="AspectFill" />
+                            <Image x:Name="imgCapa" Aspect="AspectFill" Source="{Binding Livro.CapaUrl}"/>
                         </Border>
 
                         <VerticalStackLayout Grid.Column="1" Spacing="8"
@@ -110,7 +116,8 @@
                                    FontFamily="Karla" FontSize="13"
                                    TextColor="{StaticResource SubFontColor}" />
                             <ProgressBar x:Name="pbProgresso"
-                                         ProgressColor="{StaticResource MainColor}" />
+                                         ProgressColor="{StaticResource MainColor}"
+                                         />
                             <Border x:Name="tagStatus" StrokeShape="RoundRectangle 12"
                                     BackgroundColor="{StaticResource MainColor}"
                                     Padding="12,4" HorizontalOptions="Start">
@@ -223,33 +230,33 @@
 
                     <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="8">
-                        <Label Grid.Row="0" Text="editora" FontFamily="Karla" FontSize="12"
+                        <Label Grid.Row="0" Text="Editora: " FontFamily="Karla" FontSize="12"
                                TextColor="{StaticResource SubFontAlpha}" />
-                        <Label Grid.Row="0" Grid.Column="1" x:Name="lbEditora"
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Livro.Editora, Converter={StaticResource NullToDefault}}"
                                FontFamily="Karla" FontSize="13"
                                TextColor="{StaticResource FontColor}" />
 
-                        <Label Grid.Row="1" Text="ano" FontFamily="Karla" FontSize="12"
+                        <Label Grid.Row="1" Text="Ano de publicação: " FontFamily="Karla" FontSize="12"
                                TextColor="{StaticResource SubFontAlpha}" />
-                        <Label Grid.Row="1" Grid.Column="1" x:Name="lbAno"
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Livro.Ano, Converter={StaticResource NullToDefault}}"
                                FontFamily="Karla" FontSize="13"
                                TextColor="{StaticResource FontColor}" />
 
-                        <Label Grid.Row="2" Text="páginas" FontFamily="Karla" FontSize="12"
+                        <Label Grid.Row="2" Text="Páginas: " FontFamily="Karla" FontSize="12"
                                TextColor="{StaticResource SubFontAlpha}" />
-                        <Label Grid.Row="2" Grid.Column="1" x:Name="lbPaginas"
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Livro.Paginas, Converter={StaticResource NullToDefault}}"
                                FontFamily="Karla" FontSize="13"
                                TextColor="{StaticResource FontColor}" />
 
-                        <Label Grid.Row="3" Text="gênero" FontFamily="Karla" FontSize="12"
+                        <Label Grid.Row="3" Text="Gênero: " FontFamily="Karla" FontSize="12"
                                TextColor="{StaticResource SubFontAlpha}" />
-                        <Label Grid.Row="3" Grid.Column="1" x:Name="lbGenero"
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Livro.Genero, Converter={StaticResource NullToDefault}}"
                                FontFamily="Karla" FontSize="13"
                                TextColor="{StaticResource FontColor}" />
 
-                        <Label Grid.Row="4" Text="ISBN" FontFamily="Karla" FontSize="12"
+                        <Label Grid.Row="4" Text="ISBN: "  FontFamily="Karla" FontSize="12"
                                TextColor="{StaticResource SubFontAlpha}" />
-                        <Label Grid.Row="4" Grid.Column="1" x:Name="lbIsbn"
+                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding Livro.Isbn, Converter={StaticResource NullToDefault}}"
                                FontFamily="Karla" FontSize="13"
                                TextColor="{StaticResource FontColor}" />
                     </Grid>

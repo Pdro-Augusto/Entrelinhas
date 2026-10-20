@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Entrelinhas.Models;
+using SQLite;
 
 namespace Entrelinhas.Services
 {
@@ -11,6 +12,7 @@ namespace Entrelinhas.Services
             var path = Path.Combine(FileSystem.AppDataDirectory, "entrelinhas.db3");
             _db = new SQLiteAsyncConnection(path);
             _db.CreateTableAsync<Livro>().Wait();
+            _db.CreateTableAsync<Anotacao>().Wait();
         }
 
         public async Task<int> InserirLivroAsync(Livro livro)
@@ -35,6 +37,38 @@ namespace Entrelinhas.Services
         public async Task<Livro?> ObterPorIdAsync(int id)
         {
             return await _db.Table<Livro>().FirstOrDefaultAsync(l => l.Id == id);
+        }
+
+        // ---------- NOVOS: detalhes do livro e anotações ----------
+
+        public async Task<int> AtualizarLivroAsync(Livro livro)
+        {
+            return await _db.UpdateAsync(livro);
+        }
+
+        public async Task<List<Anotacao>> ListarAnotacoesAsync(int livroId)
+        {
+            return await _db.Table<Anotacao>()
+                            .Where(a => a.LivroId == livroId)
+                            .OrderByDescending(a => a.Data)
+                            .ToListAsync();
+        }
+
+        public async Task<int> SalvarAnotacaoAsync(Anotacao nota)
+        {
+            return await _db.InsertAsync(nota);
+        }
+
+        public async Task<int> ExcluirAnotacaoAsync(Anotacao nota)
+        {
+            return await _db.DeleteAsync(nota);
+        }
+
+        public async Task ExcluirLivroAsync(int livroId)
+        {
+            // Apaga primeiro as anotações do livro, depois o livro em si
+            await _db.ExecuteAsync("DELETE FROM Anotacao WHERE LivroId = ?", livroId);
+            await _db.DeleteAsync<Livro>(livroId);
         }
     }
 }

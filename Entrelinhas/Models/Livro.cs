@@ -22,6 +22,9 @@ public class Livro
     // Dados do usuário
     public StatusLeitura Status { get; set; } = StatusLeitura.QueroLer;
     public int PaginaAtual { get; set; } = 0;
+
+    public int PaginasLidas { get; set; }
+
     public int Avaliacao { get; set; } = 0;
     public bool Favorito { get; set; } = false;
     public bool ListaDesejo { get; set; } = false;

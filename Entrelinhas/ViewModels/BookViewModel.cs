@@ -1,10 +1,13 @@
-﻿using Entrelinhas.Services;
+﻿using System.Collections.ObjectModel;
+using Entrelinhas.Models;
+using Entrelinhas.Services;
 
 namespace Entrelinhas.ViewModels;
 
 public partial class BookViewModel : BaseViewModel
 {
     private readonly DatabaseService _databaseService;
+
     public BookViewModel(DatabaseService databaseService)
     {
         _databaseService = databaseService;
@@ -24,6 +27,9 @@ public partial class BookViewModel : BaseViewModel
         set => SetProperty(ref _livro, value);
     }
 
+    // Anotações do livro aberto (a página usa essa lista direto)
+    public ObservableCollection<Anotacao> Anotacoes { get; } = new();
+
     public async Task BuscarLivroAsync()
     {
         if (!LivroId.HasValue) return;
@@ -31,10 +37,43 @@ public partial class BookViewModel : BaseViewModel
         try
         {
             Livro = await _databaseService.ObterPorIdAsync(LivroId.Value);
+
+            Anotacoes.Clear();
+            if (Livro is not null)
+            {
+                var notas = await _databaseService.ListarAnotacoesAsync(LivroId.Value);
+                foreach (var nota in notas)
+                    Anotacoes.Add(nota);
+            }
         }
         finally
         {
             IsLoading = false;
         }
+    }
+
+    // Grava no banco o que mudou no livro (progresso, status)
+    public async Task SalvarLivroAsync()
+    {
+        if (Livro is null) return;
+        await _databaseService.AtualizarLivroAsync(Livro);
+    }
+
+    public async Task AdicionarAnotacaoAsync(Anotacao nota)
+    {
+        await _databaseService.SalvarAnotacaoAsync(nota);
+        Anotacoes.Insert(0, nota); // a mais nova aparece primeiro
+    }
+
+    public async Task ExcluirAnotacaoAsync(Anotacao nota)
+    {
+        await _databaseService.ExcluirAnotacaoAsync(nota);
+        Anotacoes.Remove(nota);
+    }
+
+    public async Task ExcluirLivroAsync()
+    {
+        if (!LivroId.HasValue) return;
+        await _databaseService.ExcluirLivroAsync(LivroId.Value);
     }
 }
