@@ -11,9 +11,9 @@
     <Grid>
 
         <!-- Barra de pesquisa -->
-        <Grid RowDefinitions="Auto, Auto, *" RowSpacing="15">
+        <Grid RowDefinitions="Auto, Auto, *">
             <Grid Grid.Row="0"
-                  Padding="20, 20, 20, 10"
+                  Padding="20, 20, 20, 0"
                   ColumnDefinitions="*, Auto"
                   ColumnSpacing="10">
                 <Border StrokeShape="RoundRectangle 10"
@@ -39,6 +39,33 @@
                         BackgroundColor="{StaticResource MainColor}"/>
             </Grid>
             <!--Lista de resultados-->
+            <HorizontalStackLayout HorizontalOptions="Center" 
+                                   x:Name="lbNaoEncontrou"
+                                   IsVisible="False"
+                                   VerticalOptions="Center" 
+                                   Spacing="5" 
+                                   Grid.Row="1">
+
+                <Label Text="Não encontrou o livro?"
+                       FontFamily="Karla"
+                       FontSize="14"
+                       TextColor="{StaticResource SubFontColor}"
+                       VerticalOptions="Center"/>
+
+                <Button x:Name="btNaoEncontrou"
+                        Text="Cadastre manualmente"
+                        Clicked="btCadastrarManualmente_Clicked"
+                        FontFamily="Karla"
+                        FontAttributes="Bold"
+                        FontSize="14"
+                        TextColor="{StaticResource MainColor}"
+                        BackgroundColor="Transparent"
+                        BorderWidth="0"
+                        Padding="0"
+                        VerticalOptions="Center"/>
+
+            </HorizontalStackLayout>
+
             <CollectionView x:Name="BookList"
                 Grid.Row="2"
                 Margin="16, 0, 16, 90">
@@ -161,7 +188,8 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Button x:Name="btSearchByScanner"
+                <Button x:Name="btCadastrarManualmente"
+                        Clicked="btCadastrarManualmente_Clicked"
                         ImageSource="pencil_icon.png"
                         Text="cadastre manualmente"
                         TextColor="{StaticResource BackgroundColor}"

@@ -3,30 +3,30 @@ using CommunityToolkit.Maui.Core;
 using Entrelinhas.ViewModels;
 
 namespace Entrelinhas.Views;
-
-[QueryProperty(nameof(Isbn), "isbn")] // Recebe o ISBN pela query string
 public partial class AddLivroPage : ContentPage
 {
     private readonly AddLivroViewModel _viewModel;
-
+    private readonly IServiceProvider _serviceProvider;
     private int? _statusLeitura;
     private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-    public AddLivroPage(AddLivroViewModel viewModel)
+    public AddLivroPage(AddLivroViewModel viewModel, IServiceProvider serviceProvider)
     {
         InitializeComponent();
         _viewModel = viewModel;
+        _serviceProvider = serviceProvider;
         BindingContext = _viewModel;
     }
 
-    public AddLivroPage(AddLivroViewModel viewModel, Livro livro) : this(viewModel)
+    // Fluxo 1: Scanner
+    public void InicializarComIsbn(string isbn)
     {
-        _viewModel.NovoLivro = livro;
+        _viewModel.Isbn = isbn; // O SetProperty dispara a busca na API
     }
 
-    public string? Isbn
+    // Fluxo 2: Pesquisa
+    public void InicializarComLivro(Livro livro)
     {
-        get => _viewModel.Isbn;
-        set => _viewModel.Isbn = value; // Repassa o ISBN para o ViewModel
+        _viewModel.NovoLivro = livro;
     }
 
     private async void btCancelar_Clicked(object sender, EventArgs e)
@@ -128,5 +128,27 @@ public partial class AddLivroPage : ContentPage
     {
         base.OnDisappearing();
         _viewModel.LivroNaoEncontrado -= OnLivroNaoEncontrado;
+    }
+
+    private async void OnEditarClicado(object sender, TappedEventArgs e)
+    {
+        if (_viewModel.NovoLivro == null) return;
+
+        try
+        {
+            _viewModel.IsLoading = true;
+
+            // Pede a AddManualPage pronta pro MAUI
+            var addManualPage = _serviceProvider.GetRequiredService<AddManualPage>();
+
+            // Passa o livro
+            addManualPage.Inicializar(_viewModel.NovoLivro);
+
+            await Shell.Current.Navigation.PushAsync(addManualPage);
+        }
+        finally
+        {
+            _viewModel.IsLoading = false;
+        }
     }
 }

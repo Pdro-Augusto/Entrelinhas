@@ -17,7 +17,8 @@ namespace Entrelinhas.Services
 
         public async Task<int> InserirLivroAsync(Livro livro)
         {
-            if (await _db.Table<Livro>().Where(l => l.Isbn == livro.Isbn).FirstOrDefaultAsync() != null)
+            if (!string.IsNullOrEmpty(livro.Isbn) &&
+                await _db.Table<Livro>().Where(l => l.Isbn == livro.Isbn).FirstOrDefaultAsync() != null)
             {
                 return -1; // Livro já existe
             }

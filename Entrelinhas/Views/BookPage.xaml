@@ -229,7 +229,7 @@
                            FontFamily="Karla" FontSize="13" LineHeight="1.4"
                            TextColor="{StaticResource SubFontColor}" />
 
-                    <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                    <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                           RowSpacing="8">
                         <Label Grid.Row="0" Text="Editora: " FontFamily="Karla" FontSize="12"
                                TextColor="{StaticResource SubFontAlpha}" />
@@ -258,6 +258,12 @@
                         <Label Grid.Row="4" Text="ISBN: "  FontFamily="Karla" FontSize="12"
                                TextColor="{StaticResource SubFontAlpha}" />
                         <Label Grid.Row="4" Grid.Column="1" Text="{Binding Livro.Isbn, Converter={StaticResource NullToDefault}}"
+                               FontFamily="Karla" FontSize="13"
+                               TextColor="{StaticResource FontColor}" />
+                        
+                        <Label Grid.Row="5" Text="Capa: "  FontFamily="Karla" FontSize="12"
+                               TextColor="{StaticResource SubFontAlpha}" />
+                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding Livro.CapaUrl, Converter={StaticResource NullToDefault}}"
                                FontFamily="Karla" FontSize="13"
                                TextColor="{StaticResource FontColor}" />
                     </Grid>

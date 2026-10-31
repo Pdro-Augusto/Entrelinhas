@@ -8,14 +8,14 @@ namespace Entrelinhas.Views;
 public partial class PesquisaPage : ContentPage
 {
 	private readonly PesquisaViewModel _viewModel;
-    private readonly AddLivroViewModel _addLivroViewModel;
+    private readonly IServiceProvider _serviceProvider;
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-    public PesquisaPage(PesquisaViewModel viewModel, AddLivroViewModel addLivroViewModel)
-	{
-		InitializeComponent();
-		_viewModel = viewModel;
-		_addLivroViewModel = addLivroViewModel;
-		BindingContext = _viewModel;
+    public PesquisaPage(PesquisaViewModel viewModel, IServiceProvider serviceProvider)
+    {
+        InitializeComponent();
+        _viewModel = viewModel;
+        _serviceProvider = serviceProvider;
+        BindingContext = _viewModel;
     }
 
     private async void btSearch_Clicked(object sender, EventArgs e)
@@ -39,17 +39,21 @@ public partial class PesquisaPage : ContentPage
                 var toast = Toast.Make("Nenhum livro encontrado.", ToastDuration.Short, 14);
                 await toast.Show(cancellationTokenSource.Token);
                 emptyState.IsVisible = true;
+                lbNaoEncontrou.IsVisible = false;
+
             }
             else if (resultado == -2)
             {
                 var toast = Toast.Make("Digite um valor para pesquisar.", ToastDuration.Short, 14);
                 await toast.Show(cancellationTokenSource.Token);
                 emptyState.IsVisible = false;
+                lbNaoEncontrou.IsVisible = true;
             }
             else if (resultado == 1)
             {
                 BookList.ItemsSource = _viewModel.Livros;
                 emptyState.IsVisible = false;
+                lbNaoEncontrou.IsVisible = true;
             }
         }
     }
@@ -61,7 +65,14 @@ public partial class PesquisaPage : ContentPage
         try
         {
             _viewModel.IsLoading = true;
-            var addLivroPage = new AddLivroPage(_addLivroViewModel, livro);
+
+            // 1. Pede ao MAUI para criar a AddLivroPage (ele já injeta as ViewModels sozinho)
+            var addLivroPage = _serviceProvider.GetRequiredService<AddLivroPage>();
+
+            // 2. Passa o livro para a página recém-criada
+            addLivroPage.InicializarComLivro(livro);
+
+            // 3. Navega
             await Shell.Current.Navigation.PushAsync(addLivroPage);
         }
         finally
@@ -70,4 +81,17 @@ public partial class PesquisaPage : ContentPage
         }
     }
 
+    private async void btCadastrarManualmente_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            _viewModel.IsLoading = true;
+            var addManualPage = _serviceProvider.GetRequiredService<AddManualPage>();
+            await Shell.Current.Navigation.PushAsync(addManualPage);
+        }
+        finally
+        {
+            _viewModel.IsLoading = false;
+        }
+    }
 }

@@ -6,14 +6,23 @@ namespace Entrelinhas.Converters
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            // Se a URL for nula ou vazia, retorna o placeholder
-            if (value is not string url || string.IsNullOrWhiteSpace(url))
+            if (value is not string caminho || string.IsNullOrWhiteSpace(caminho))
             {
-                return "book_placeholder.svg"; // Nome do arquivo na pasta Resources/Images
+                return "book_placeholder.svg";
             }
 
-            // Garante que a URL use HTTPS para não ser bloqueada pelo Android
-            var urlSegura = url.Replace("http://", "https://");
+            // 1. Verifica se é um arquivo local (não começa com http)
+            if (!caminho.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                if(caminho.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
+                {
+                    caminho = caminho.Substring(8);
+                }
+                return caminho;
+            }
+
+            // 2. Se for URL, trata como antes
+            var urlSegura = caminho.Replace("http://", "https://");
 
             try
             {
@@ -21,7 +30,6 @@ namespace Entrelinhas.Converters
             }
             catch
             {
-                // Se a URL for inválida, também retorna o placeholder
                 return "book_placeholder.svg";
             }
         }

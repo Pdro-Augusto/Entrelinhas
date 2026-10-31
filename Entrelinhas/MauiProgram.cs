@@ -21,6 +21,10 @@ namespace Entrelinhas
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                //.UseMauiCommunityToolkit(options =>
+                //{
+                //    options.SetShouldEnableSnackbarOnWindows(true);
+                //})
                 .UseBarcodeReader()
 
                 .ConfigureFonts(fonts =>
@@ -45,6 +49,8 @@ namespace Entrelinhas
 #endif
                 })
 
+
+
                 // Serviços
                 .Services
                     .AddSingleton<DatabaseService>()
@@ -54,16 +60,19 @@ namespace Entrelinhas
                     .AddTransient<EstantePage>()
                     .AddTransient<PesquisaPage>()
                     .AddTransient<BookPage>()
+                    .AddTransient<ScannerPage>()
+                    .AddTransient<AddManualPage>()
 
                     .AddTransient<AddLivroViewModel>()
                     .AddTransient<EstanteViewModel>()
                     .AddTransient<PesquisaViewModel>()
-                    .AddTransient<BookViewModel>();
+                    .AddTransient<BookViewModel>()
+                    .AddTransient<AddManualViewModel>();
 
 
-            #if DEBUG
+#if DEBUG
                 builder.Logging.AddDebug();
-            #endif
+#endif
 
             return builder.Build();
         }

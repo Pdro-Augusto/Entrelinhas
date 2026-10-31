@@ -250,7 +250,7 @@
                                 x:Name="btSalvar"
                                 Text="adicionar à estante"
                                 Clicked="btSalvar_Clicked"
-                                BackgroundColor="Green"
+                                BackgroundColor="{StaticResource MainColor}"
                                 TextColor="{StaticResource BackgroundColor}"
                                 FontAttributes="Bold"
                                 FontSize="16"
@@ -262,11 +262,21 @@
                                TextColor="{StaticResource FontColor}"
                                FontSize="18"
                                HorizontalOptions="Center"/>
-                        <Label Text="edite os dados manualmente"
-                               TextColor="{StaticResource FontColor}"
-                               FontFamily="Karla"
-                               FontSize="18"
-                               HorizontalOptions="Center"/>
+                        <Border StrokeThickness="0"
+                                BackgroundColor="Transparent"
+                                Padding="10"
+                                WidthRequest="250"
+                                HorizontalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnEditarClicado"/>
+                            </Border.GestureRecognizers>
+
+                            <Label Text="edite os dados manualmente"
+                                   TextColor="{StaticResource FontColor}"
+                                   FontFamily="Karla"
+                                   FontSize="18"
+                                   HorizontalOptions="Center"/>
+                        </Border>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
             </VerticalStackLayout>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Entrelinhas.Views.AddManualPage"
+             Title="AddManualPage"
+             xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
+             droid:NavigationBar.Color="{StaticResource BackgroundColor}"
+             droid:NavigationBar.Style="DarkContent"
+             Shell.TabBarIsVisible="False"
+             Shell.NavBarIsVisible="False">
+
+    <!-- ESTILOS REUTILIZÁVEIS PARA OS CAMPOS -->
+    <ContentPage.Resources>
+        <!-- Estilo para o fundo dos campos -->
+        <Style x:Key="EntryBorderStyle" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="Stroke" Value="{StaticResource SecundaryColor}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="BackgroundColor" Value="{StaticResource BackgroundColor}" />
+            <Setter Property="Padding" Value="12, 2" />
+            <Setter Property="Margin" Value="0, 4, 0, 0" />
+        </Style>
+
+        <!-- Estilo para os textos digitáveis -->
+        <Style x:Key="EntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{StaticResource FontColor}" />
+            <Setter Property="FontFamily" Value="Karla" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+        </Style>
+
+        <!-- Estilo para os Títulos das seções -->
+        <Style x:Key="SectionTitleStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource FontColor}" />
+            <Setter Property="FontFamily" Value="Fraunces" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="0, 10, 0, 0" />
+        </Style>
+    </ContentPage.Resources>
+    
+    <!--Grid da página inteira para indicador de carregamento-->
+    <Grid>
+
+        <ScrollView>
+            <VerticalStackLayout BackgroundColor="{StaticResource BackgroundColor}" Spacing="0">
+
+                <!-- HEADER (Capa e Botão Voltar) -->
+                <Grid HeightRequest="220" BackgroundColor="{StaticResource MainColor}">
+                    <Border StrokeShape="RoundRectangle 10" WidthRequest="120" HeightRequest="170"
+                    VerticalOptions="Center" HorizontalOptions="Center" Margin="0, 20, 0, 0">
+                        <Image x:Name="imgCapa"
+                               BackgroundColor="{StaticResource SecundaryColor}"
+                               Source="{Binding Livro.CapaUrl}"
+                               Aspect="AspectFill">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnImageTapped"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </Border>
+
+                    <Button x:Name="btCancelar" ImageSource="flecha_esquerda.png" Padding="0"
+                            Clicked="btCancelar_Clicked" CornerRadius="10" WidthRequest="40" HeightRequest="40"
+                            VerticalOptions="Start" HorizontalOptions="Start" Margin="16, 16, 0, 0"
+                            BackgroundColor="{StaticResource SubFontAlpha}"/>
+                </Grid>
+
+                <!-- CORPO DO FORMULÁRIO -->
+                <VerticalStackLayout Padding="24, 20, 24, 40" Spacing="10">
+
+                    <!-- SEÇÃO: DADOS PRINCIPAIS -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Título"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="0"/>
+                        <Border Style="{StaticResource EntryBorderStyle}">
+                            <Entry x:Name="txTitulo"
+                                   Text="{Binding Livro.Titulo}"
+                                   Style="{StaticResource EntryStyle}"
+                                   FontSize="18" FontAttributes="Bold"/>
+                        </Border>
+
+                        <Label Text="Autor"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="0"/>
+                        <Border Style="{StaticResource EntryBorderStyle}">
+                            <Entry x:Name="txAutor"
+                                   Text="{Binding Livro.Autor}"
+                                   Style="{StaticResource EntryStyle}"/>
+                        </Border>
+
+                        <Grid ColumnDefinitions="*, *"
+                              ColumnSpacing="10">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Ano"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Margin="0"/>
+                                <Border Style="{StaticResource EntryBorderStyle}">
+                                    <Entry x:Name="txAno"
+                                           Text="{Binding Livro.Ano}"
+                                           Keyboard="Numeric"
+                                           Style="{StaticResource EntryStyle}"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Páginas"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Margin="0"/>
+                                <Border Style="{StaticResource EntryBorderStyle}">
+                                    <Entry x:Name="txPaginas"
+                                           Text="{Binding Livro.Paginas}"
+                                           Keyboard="Numeric"
+                                           Style="{StaticResource EntryStyle}"/>
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="1"
+                             Color="{StaticResource MainColorAlpha}"
+                             Margin="0, 10"/>
+
+                    <!-- SEÇÃO: DETALHES DO LIVRO -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Editora"
+                               Style="{StaticResource SectionTitleStyle}" 
+                               Margin="0"/>
+                        <Border Style="{StaticResource EntryBorderStyle}">
+                            <Entry x:Name="txEditora"
+                                   Text="{Binding Livro.Editora}"
+                                   Style="{StaticResource EntryStyle}"/>
+                        </Border>
+
+                        <Label Text="Gênero"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="0"/>
+                        <Border Style="{StaticResource EntryBorderStyle}">
+                            <Entry x:Name="txGenero"
+                                   Text="{Binding Livro.Genero}"
+                                   Style="{StaticResource EntryStyle}"
+                                   Placeholder="Ex: Ficção, Romance..."/>
+                        </Border>
+
+                        <Label Text="ISBN"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="0"/>
+                        <Border Style="{StaticResource EntryBorderStyle}">
+                            <Entry x:Name="txISBN"
+                                   Text="{Binding Livro.Isbn}"
+                                   Keyboard="Numeric"
+                                   Style="{StaticResource EntryStyle}"
+                                   Placeholder="Digite o ISBN"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="1"
+                             Color="{StaticResource MainColorAlpha}"
+                             Margin="0, 10"/>
+
+                    <!-- SEÇÃO: STATUS DE LEITURA -->
+                    <VerticalStackLayout>
+                        <Label Text="Status de Leitura"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="0, 0, 0, 10"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <!-- Botões de status (mantive o código original, só ajustei a altura) -->
+                            <Button x:Name="btWantRead"
+                                    Text="Quero ler"
+                                    TextColor="{StaticResource FontColor}"
+                                    Clicked="btWantRead_Clicked"
+                                    FontFamily="Karla"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    CornerRadius="15"
+                                    HeightRequest="35"
+                                    Padding="16, 5"
+                                    BorderWidth="1"
+                                    BorderColor="{StaticResource MainColor}"
+                                    BackgroundColor="{StaticResource MainColorAlpha}"/>
+                            <Button x:Name="btReading"
+                                    Text="Lendo"
+                                    TextColor="{StaticResource FontColor}"
+                                    Clicked="btReading_Clicked"
+                                    FontFamily="Karla"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    CornerRadius="15"
+                                    HeightRequest="35"
+                                    Padding="16, 5"
+                                    BorderWidth="1"
+                                    BorderColor="{StaticResource MainColor}"
+                                    BackgroundColor="{StaticResource MainColorAlpha}"/>
+                            <Button x:Name="btRead"
+                                    Text="Lido"
+                                    TextColor="{StaticResource FontColor}"
+                                    Clicked="btRead_Clicked"
+                                    FontFamily="Karla"
+                                    FontAttributes="Bold"
+                                    FontSize="13"
+                                    CornerRadius="15"
+                                    HeightRequest="35"
+                                    Padding="16, 5"
+                                    BorderWidth="1"
+                                    BorderColor="{StaticResource MainColor}"
+                                    BackgroundColor="{StaticResource MainColorAlpha}"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="1"
+                             Color="{StaticResource MainColorAlpha}"
+                             Margin="0, 10"/>
+
+                    <!-- SEÇÃO: SINOPSE -->
+                    <VerticalStackLayout>
+                        <Label Text="Sinopse"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="0, 0, 0, 10"/>
+                        <Border Style="{StaticResource EntryBorderStyle}"
+                                Padding="12, 10">
+                            <Editor x:Name="txSinopse"
+                                    Text="{Binding Livro.Sinopse}"
+                                    Style="{StaticResource EntryStyle}"
+                                    AutoSize="TextChanges"
+                                    HeightRequest="120"
+                                    Placeholder="Escreva ou edite a sinopse aqui..."/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- BOTÃO SALVAR -->
+                    <Button x:Name="btSalvar"
+                            Text="Adicionar à estante"
+                            Clicked="btSalvar_Clicked" 
+                            BackgroundColor="{StaticResource MainColor}" 
+                            TextColor="{StaticResource BackgroundColor}"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            FontFamily="Karla" 
+                            CornerRadius="12"
+                            HeightRequest="50"
+                            WidthRequest="250"
+                            HorizontalOptions="Center"
+                            Margin="0, 10, 0, 0"/>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!--Indicador de Carregamento-->
+
+        <!-- Overlay que cobre a tela inteira -->
+        <Grid IsVisible="{Binding IsLoading}"
+              BackgroundColor="#80000000"
+              Grid.RowSpan="99">
+
+            <!-- Card central com o indicador -->
+            <Border StrokeShape="RoundRectangle 16"
+                    Stroke="Transparent"
+                    BackgroundColor="#80000000"
+                    Padding="30,25"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="150"
+                    HeightRequest="150">
+
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                            Offset="0,4"
+                            Radius="12"
+                            Opacity="0.3" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="15"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+
+                    <!-- Indicador circular -->
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       Color="{StaticResource BackgroundColor}"
+                                       WidthRequest="50"
+                                       HeightRequest="50"
+                                       HorizontalOptions="Center" />
+
+                    <!-- Texto abaixo -->
+                    <Label Text="Carregando..."
+                           FontSize="14"
+                           FontFamily="Fraunces"
+                           TextColor="{StaticResource BackgroundColor}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>
