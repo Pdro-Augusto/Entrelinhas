@@ -28,25 +28,39 @@
               Padding="20, 16, 20, 0"
               ColumnDefinitions="Auto, *, Auto">
 
-            <Label Grid.Column="2"
-                   FontSize="20"
-                   TextColor="{StaticResource FontColor}"
-                   Text="Menu">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnMenuClicado"/>
-                </Label.GestureRecognizers>
-            </Label>
+            <ImageButton Grid.Column="2"
+                         Source="editar.svg"
+                         WidthRequest="40" 
+                         HeightRequest="40"
+                         Padding="10"
+                         CornerRadius="10"
+                         BackgroundColor="{StaticResource MainColor}"
+                         Clicked="OnEditarClicado"
+                         VerticalOptions="Center"
+                         HorizontalOptions="End"
+                         Margin="0, 0, 16, 0"/>
         </Grid>
 
         <VerticalStackLayout Grid.Row="1"
                              Padding="24, 14, 24, 14"
                              Spacing="3">
-            <Label x:Name="lbTitulo"
-                   Text="{Binding Livro.Titulo}"
-                   FontFamily="Fraunces"
-                   FontAttributes="Bold"
-                   FontSize="24"
-                   TextColor="{StaticResource FontColor}"/>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Label x:Name="lbTitulo"
+                       Text="{Binding Livro.Titulo}"
+                       FontFamily="Fraunces"
+                       FontAttributes="Bold"
+                       FontSize="24"
+                       TextColor="{StaticResource FontColor}"/>
+
+                <Label x:Name="lbFavorito" Grid.Column="1"
+                       Text="♡" FontSize="28" Padding="8"
+                       VerticalOptions="Center"
+                       TextColor="{StaticResource SubFontAlpha}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFavoritoTocado"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
             <Label x:Name="lbAutorAno"
                    Text="{Binding Livro.Autor}"
                    FontFamily="Karla"
@@ -104,6 +118,17 @@
 
                 <!-- Progresso -->
                 <VerticalStackLayout x:Name="vsProgresso" Spacing="16">
+                    <!--Botão para mover para a estante (quando o livro estiver na lista de desejos)-->
+                    <Button x:Name="btMoverEstante"
+                            Text="Mover para a estante"
+                            Clicked="OnMoverEstanteClicado"
+                            IsVisible="False"
+                            BackgroundColor="{StaticResource MainColor}"
+                            TextColor="White"
+                            FontFamily="Karla" FontAttributes="Bold"
+                            CornerRadius="12" HeightRequest="44"/>
+                    
+
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
                         <Border Grid.Column="0" StrokeShape="RoundRectangle 8"
                                 WidthRequest="70" HeightRequest="100"
@@ -132,7 +157,7 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <Grid x:Name="gridAtualizar" ColumnDefinitions="*,Auto" ColumnSpacing="10">
                         <Border Grid.Column="0" StrokeShape="RoundRectangle 12"
                                 Stroke="{StaticResource MainColor}"
                                 BackgroundColor="{StaticResource MainColorAlpha}"
@@ -151,6 +176,17 @@
                                 FontFamily="Karla" FontAttributes="Bold"
                                 CornerRadius="12" HeightRequest="44" />
                     </Grid>
+
+                    <!-- Avaliação -->
+                    <VerticalStackLayout x:Name="stAvaliacao" Spacing="4">
+                        <Label Text="Avaliar livro"
+                               FontFamily="Karla" FontAttributes="Bold" FontSize="13"
+                               TextColor="{StaticResource FontColor}"/>
+                        <HorizontalStackLayout x:Name="stCoracoes" Spacing="0"/>
+                        <Label x:Name="lbAvaliacao"
+                               FontFamily="Karla" FontSize="12"
+                               TextColor="{StaticResource SubFontAlpha}"/>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
 
                 <!-- Anotações -->
@@ -267,6 +303,16 @@
                                FontFamily="Karla" FontSize="13"
                                TextColor="{StaticResource FontColor}" />
                     </Grid>
+                    
+                    <Button Text="Excluir livro"
+                            Clicked="OnExcluirLivroClicado"
+                            BackgroundColor="Transparent"
+                            TextColor="#B3261E"
+                            BorderColor="#B3261E"
+                            BorderWidth="1"
+                            FontFamily="Karla" FontSize="13"
+                            CornerRadius="10" HeightRequest="40"
+                            Margin="0, 24, 0, 0"/>
                 </VerticalStackLayout>
             </Grid>
         </ScrollView>

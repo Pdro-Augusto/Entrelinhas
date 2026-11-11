@@ -8,18 +8,40 @@ public partial class AddManualPage : ContentPage
 {
     private readonly AddManualViewModel _viewModel;
     private int? _statusLeitura;
+    private bool _modoEdicao;
     private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
     public AddManualPage(AddManualViewModel viewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = _viewModel;
+
+        btWantRead_Clicked(btWantRead, EventArgs.Empty);
     }
 
-    // Método para receber o livro
+    // Método para receber o livro da página anterior
     public void Inicializar(Livro livro)
     {
         _viewModel.Livro = livro;
+        _modoEdicao = livro.Id != 0;
+
+        if (_modoEdicao)
+        {
+            btListaDesejo.IsVisible = false;
+            btSalvar.Text = "Salvar alterações";
+
+            _statusLeitura = (int)livro.Status;
+            var botao = _statusLeitura switch
+            {
+                1 => btReading,
+                2 => btRead,
+                _ => btWantRead
+            };
+            
+            if (botao == btWantRead) btWantRead_Clicked(botao, EventArgs.Empty);
+            else if (botao == btReading) btReading_Clicked(botao, EventArgs.Empty);
+            else btRead_Clicked(botao, EventArgs.Empty);
+        }
     }
 
     private async void btCancelar_Clicked(object sender, EventArgs e)
@@ -27,7 +49,10 @@ public partial class AddManualPage : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 
-    private async void btSalvar_Clicked(object sender, EventArgs e)
+    private async void btSalvar_Clicked(object sender, EventArgs e) => await SalvarAsync(false);
+    private async void btListaDesejo_Clicked(object sender, EventArgs e) => await SalvarAsync(true);
+
+    private async Task SalvarAsync(bool listaDesejo)      // era: private async void btSalvar_Clicked(...)
     {
         try
         {
@@ -40,16 +65,18 @@ public partial class AddManualPage : ContentPage
 
             _viewModel.Livro ??= new Livro();
 
-            //_viewModel.Livro.CapaUrl = imgCapa.Source?.ToString();
             _viewModel.Livro.Ano = int.TryParse(txAno.Text, out var ano) ? ano : null;
             _viewModel.Livro.Paginas = int.TryParse(txPaginas.Text, out var paginas) ? paginas : null;
 
-            // Coloque um breakpoint aqui e confira os valores de livro.
-            var resultado = await _viewModel.SalvarLivroAsync(_statusLeitura ?? 0);
+            var resultado = await _viewModel.SalvarLivroAsync(
+            listaDesejo ? 0 : (_statusLeitura ?? 0),
+            listaDesejo ? true : (bool?)null);
 
             if (resultado > 0)
             {
-                var toast = Toast.Make("Livro salvo!", ToastDuration.Short, 14);
+                var toast = Toast.Make(
+                    listaDesejo ? "Adicionado à lista de desejos!" : "Livro salvo!",   // mudou
+                    ToastDuration.Short, 14);
                 await toast.Show(cancellationTokenSource.Token);
                 await Shell.Current.GoToAsync("..");
             }
@@ -66,14 +93,7 @@ public partial class AddManualPage : ContentPage
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine(ex.ToString());
-
-            var toast = Toast.Make(
-                $"Erro ao salvar: {ex.Message}",
-                ToastDuration.Long,
-                14);
-
-            await toast.Show(cancellationTokenSource.Token);
+            await DisplayAlertAsync("Erro", $"Ocorreu um erro ao salvar o livro: {ex.Message}", "OK");
         }
     }
 

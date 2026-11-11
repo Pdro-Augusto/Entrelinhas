@@ -6,13 +6,19 @@ namespace Entrelinhas.Services
     public class DatabaseService
     {
         private readonly SQLiteAsyncConnection _db;
+        private readonly Lazy<Task> _initTask;
 
         public DatabaseService()
         {
             var path = Path.Combine(FileSystem.AppDataDirectory, "entrelinhas.db3");
             _db = new SQLiteAsyncConnection(path);
-            _db.CreateTableAsync<Livro>().Wait();
-            _db.CreateTableAsync<Anotacao>().Wait();
+            _initTask = new Lazy<Task>(InicializarAsync);
+        }
+
+        private async Task InicializarAsync()
+        {
+            await _db.CreateTableAsync<Livro>();
+            await _db.CreateTableAsync<Anotacao>();
         }
 
         public async Task<int> InserirLivroAsync(Livro livro)

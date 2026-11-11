@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+Ôªøusing System.Text.RegularExpressions;
 using Entrelinhas.Models;
 using Entrelinhas.ViewModels;
 using CommunityToolkit.Maui.Core.Platform;
@@ -12,12 +12,17 @@ namespace Entrelinhas.Views;
 public partial class BookPage : ContentPage
 {
     private readonly BookViewModel _viewModel;
+    private readonly IServiceProvider _serviceProvider;
     private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
-    public BookPage(BookViewModel bookViewModel)
+    private const int TotalCoracoes = 5;
+    private const double TamanhoCoracao = 40;
+    private readonly Grid[] _preenchimentos = new Grid[TotalCoracoes];
+    public BookPage(BookViewModel bookViewModel, IServiceProvider serviceProvider)
     {
         InitializeComponent();
+        CriarCoracoes();
         _viewModel = bookViewModel;
+        _serviceProvider = serviceProvider;
         BindingContext = _viewModel;
 
         BindableLayout.SetItemsSource(listaAnotacoes, _viewModel.Anotacoes);
@@ -49,12 +54,15 @@ public partial class BookPage : ContentPage
 
         if (_viewModel.Livro is null)
         {
-            await DisplayAlertAsync("Aviso", "Livro n„o encontrado.", "OK");
+            await DisplayAlertAsync("Aviso", "Livro n√£o encontrado.", "OK");
             return;
         }
 
         AtualizarProgresso();
         AtualizarStatus();
+        AtualizarFavorito();
+        AtualizarAvaliacao();
+        AtualizarListaDesejo();
     }
 
     // ---------- ABAS ----------
@@ -97,12 +105,12 @@ public partial class BookPage : ContentPage
         if (total <= 0)
         {
             pbProgresso.Progress = 0;
-            lbProgresso.Text = "N˙mero de p·ginas n„o informado";
+            lbProgresso.Text = "N√∫mero de p√°ginas n√£o informado";
             return;
         }
 
         pbProgresso.Progress = Math.Clamp((double)livro.PaginasLidas / total, 0, 1);
-        lbProgresso.Text = $"{livro.PaginasLidas} de {total} p·ginas";
+        lbProgresso.Text = $"{livro.PaginasLidas} de {total} p√°ginas";
     }
 
     private void AtualizarStatus()
@@ -111,7 +119,7 @@ public partial class BookPage : ContentPage
         lbStatus.Text = NomeStatus(livro.Status);
     }
 
-    // Transforma o nome do enum em texto legÌvel: "QueroLer" -> "Quero ler"
+    // Transforma o nome do enum em texto leg√≠vel: "QueroLer" -> "Quero ler"
     private static string NomeStatus(StatusLeitura status)
     {
         var nome = Regex.Replace(status.ToString(), "(?<=[a-z])(?=[A-Z])", " ").ToLowerInvariant();
@@ -125,20 +133,20 @@ public partial class BookPage : ContentPage
 
         if (!int.TryParse(entryPaginasLidas.Text, out var paginas) || paginas < 0)
         {
-            await DisplayAlertAsync("Aviso", "Digite um n˙mero de p·gina v·lido.", "OK");
+            await DisplayAlertAsync("Aviso", "Digite um n√∫mero de p√°gina v√°lido.", "OK");
             return;
         }
 
         int total = livro.Paginas ?? 0;
         if (total > 0 && paginas > total)
         {
-            await DisplayAlertAsync("Aviso", $"O livro tem sÛ {total} p·ginas.", "OK");
+            await DisplayAlertAsync("Aviso", $"O livro tem s√≥ {total} p√°ginas.", "OK");
             return;
         }
 
         livro.PaginasLidas = paginas;
         await _viewModel.AtualizarLivroAsync();
-        var toast = Toast.Make("P·ginas atualizadas!", ToastDuration.Short, 14);
+        var toast = Toast.Make("P√°ginas atualizadas!", ToastDuration.Short, 14);
         await toast.Show(cancellationTokenSource.Token);
 
         AtualizarProgresso();
@@ -173,7 +181,7 @@ public partial class BookPage : ContentPage
         AtualizarStatus();
     }
 
-    // ---------- ANOTA«’ES ----------
+    // ---------- ANOTA√á√ïES ----------
 
     private async void OnSalvarAnotacaoClicado(object? sender, EventArgs e)
     {
@@ -198,7 +206,7 @@ public partial class BookPage : ContentPage
         };
 
         await _viewModel.AdicionarAnotacaoAsync(nota);
-        var toast = Toast.Make("AnotaÁ„o adicionada!", ToastDuration.Short, 14);
+        var toast = Toast.Make("Anota√ß√£o adicionada!", ToastDuration.Short, 14);
         await toast.Show(cancellationTokenSource.Token);
 
         edtAnotacao.Text = string.Empty;
@@ -210,34 +218,180 @@ public partial class BookPage : ContentPage
         if ((sender as Label)?.BindingContext is not Anotacao nota) return;
 
         bool confirmou = await DisplayAlertAsync(
-            "Excluir anotaÁ„o", "Quer apagar essa anotaÁ„o?", "Excluir", "Cancelar");
+            "Excluir anota√ß√£o", "Quer apagar essa anota√ß√£o?", "Excluir", "Cancelar");
         if (!confirmou) return;
 
         await _viewModel.ExcluirAnotacaoAsync(nota);
-        var toast = Toast.Make("AnotaÁ„o excluÌda!", ToastDuration.Short, 14);
+        var toast = Toast.Make("Anota√ß√£o exclu√≠da!", ToastDuration.Short, 14);
         await toast.Show(cancellationTokenSource.Token);
     }
 
-    // ---------- MENU E NAVEGA«√O ----------
-
-    private async void OnMenuClicado(object? sender, TappedEventArgs e)
+    // ------------- FAVORITO -------------
+    private void AtualizarFavorito()
     {
-        var acao = await DisplayActionSheetAsync(
-            "OpÁıes", "Cancelar", "Remover da estante");
+        if (livro is null) return;
+        lbFavorito.Text = livro.Favorito ? "‚ô•" : "‚ô°";
+        lbFavorito.TextColor = livro.Favorito
+            ? Cor("MainColor", "#D85A30")
+            : Cor("SubFontAlpha", "#A08C82");
+    }
 
-        if (acao != "Remover da estante") return;
+    private async void OnFavoritoTocado(object? sender, TappedEventArgs e)
+    {
+        if (livro is null) return;
 
+        livro.Favorito = !livro.Favorito;
+        await _viewModel.AtualizarLivroAsync();
+        AtualizarFavorito();
+
+        var toast = Toast.Make(
+            livro.Favorito ? "Adicionado aos favoritos!" : "Removido dos favoritos!",
+            ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
+    }
+
+    // ---------- MENU E NAVEGA√á√ÉO ----------
+    private async void OnEditarClicado(object? sender, EventArgs e)
+    {
+        if (livro is null) return;
+
+        var page = _serviceProvider.GetRequiredService<AddManualPage>();
+        page.Inicializar(livro);
+        await Shell.Current.Navigation.PushAsync(page);
+    }
+
+    private async void OnExcluirLivroClicado(object? sender, EventArgs e)
+    {
         bool confirmou = await DisplayAlertAsync(
-            "Remover livro", "Tem certeza que quer tirar este livro da estante?",
-            "Remover", "Cancelar");
+            "Excluir livro",
+            "Tem certeza que quer tirar este livro da estante? Isso tamb√©m apaga as anota√ß√µes.",
+            "Excluir", "Cancelar");
         if (!confirmou) return;
 
         await _viewModel.ExcluirLivroAsync();
+        var toast = Toast.Make("Livro exclu√≠do!", ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
         await Shell.Current.GoToAsync("..");
     }
 
     public async void btVolta_Clicked(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("..");
+    }
+
+    // --------------- AVALIA√á√ÉO ---------------------
+    private void CriarCoracoes()
+    {
+        for (int i = 0; i < TotalCoracoes; i++)
+        {
+            int indice = i;
+
+            var contorno = new Label
+            {
+                Text = "‚ô°",
+                FontSize = 34,
+                TextColor = Cor("SubFontAlpha", "#A08C82"),
+                WidthRequest = TamanhoCoracao,
+                HeightRequest = TamanhoCoracao,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center
+            };
+
+            var cheio = new Label
+            {
+                Text = "‚ô•",
+                FontSize = 34,
+                TextColor = Cor("MainColor", "#D85A30"),
+                WidthRequest = TamanhoCoracao,
+                HeightRequest = TamanhoCoracao,
+                HorizontalOptions = LayoutOptions.Start,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center
+            };
+
+            // "janela" que mostra 0%, 50% ou 100% do cora√ß√£o cheio
+            var corte = new Grid
+            {
+                WidthRequest = 0,
+                HorizontalOptions = LayoutOptions.Start,
+                IsClippedToBounds = true
+            };
+            corte.Add(cheio);
+            _preenchimentos[i] = corte;
+
+            var celula = new Grid { WidthRequest = TamanhoCoracao, HeightRequest = TamanhoCoracao };
+            celula.Add(contorno);
+            celula.Add(corte);
+
+            var toque = new TapGestureRecognizer();
+            toque.Tapped += async (s, e) =>
+            {
+                double x = e.GetPosition((View)s!)?.X ?? TamanhoCoracao;
+                double nota = indice + (x < TamanhoCoracao / 2 ? 0.5 : 1.0);
+                await DefinirAvaliacaoAsync(nota);
+            };
+            celula.GestureRecognizers.Add(toque);
+
+            stCoracoes.Add(celula);
+        }
+    }
+
+    private void AtualizarAvaliacao()
+    {
+        if (livro is null) return;
+
+        for (int i = 0; i < TotalCoracoes; i++)
+        {
+            double parte = Math.Clamp(livro.Avaliacao - i, 0, 1);   // 0, 0.5 ou 1
+            _preenchimentos[i].WidthRequest = TamanhoCoracao * parte;
+        }
+
+        lbAvaliacao.Text = livro.Avaliacao > 0
+            ? $"{livro.Avaliacao:0.0} de 5"
+            : "Sem avalia√ß√£o";
+    }
+
+    private async Task DefinirAvaliacaoAsync(double nota)
+    {
+        if (livro is null) return;
+
+        // tocar na mesma nota de novo limpa a avalia√ß√£o
+        livro.Avaliacao = livro.Avaliacao == nota ? 0 : nota;
+
+        await _viewModel.AtualizarLivroAsync();
+        AtualizarAvaliacao();
+
+        var toast = Toast.Make(
+            livro.Avaliacao > 0 ? $"Avalia√ß√£o: {livro.Avaliacao:0.0}" : "Avalia√ß√£o removida",
+            ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
+    }
+
+    // ------------ LISTA DE DESEJOS ----------------
+    private void AtualizarListaDesejo()
+    {
+        if (livro is null) return;
+        bool desejo = livro.ListaDesejo;
+
+        // s√≥ na lista de desejos
+        btMoverEstante.IsVisible = desejo;
+
+        // s√≥ quando j√° est√° na estante
+        lbProgresso.IsVisible = !desejo;
+        pbProgresso.IsVisible = !desejo;
+        gridAtualizar.IsVisible = !desejo;
+        stAvaliacao.IsVisible = !desejo;
+    }
+
+    private async void OnMoverEstanteClicado(object? sender, EventArgs e)
+    {
+        if (livro is null) return;
+
+        livro.ListaDesejo = false;
+        await _viewModel.AtualizarLivroAsync();
+        AtualizarListaDesejo();
+
+        var toast = Toast.Make("Livro movido para a estante!", ToastDuration.Short, 14);
+        await toast.Show(cancellationTokenSource.Token);
     }
 }

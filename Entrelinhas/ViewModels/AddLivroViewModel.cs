@@ -50,13 +50,15 @@ public partial class AddLivroViewModel : BaseViewModel
         }
     }
 
-    public async Task<int> SalvarLivroAsync(int? statusLeitura)
+    public async Task<int> SalvarLivroAsync(int? statusLeitura, bool? listaDesejo = null)
     {
         if (NovoLivro == null) return 0;
 
         IsLoading = true;
         try
         {
+            if (listaDesejo.HasValue)
+                NovoLivro.ListaDesejo = listaDesejo.Value;
             if (statusLeitura == null)
                 statusLeitura = 0; // Default para QueroLer
             NovoLivro.Status = (StatusLeitura)statusLeitura;

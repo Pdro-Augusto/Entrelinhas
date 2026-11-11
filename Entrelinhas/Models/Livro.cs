@@ -25,9 +25,10 @@ public class Livro
 
     public int PaginasLidas { get; set; }
 
-    public int Avaliacao { get; set; } = 0;
+    public double Avaliacao { get; set; } = 0;
     public bool Favorito { get; set; } = false;
     public bool ListaDesejo { get; set; } = false;
+    public Livro Clone() => (Livro)MemberwiseClone();
     public string? Resumo { get; set; }
     public DateTime DataCadastro { get; set; } = DateTime.Now;
 }

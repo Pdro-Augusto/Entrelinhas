@@ -48,6 +48,12 @@ public partial class EstantePage : ContentPage
         ApplyFilter();
     }
 
+    private void btFavorites_Clicked(object sender, EventArgs e)
+    {
+        HighlightButton((Button)sender);
+        ApplyFilter();
+    }
+
     private async void btAddNewBook_Clicked(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("//scanner");
@@ -62,6 +68,8 @@ public partial class EstantePage : ContentPage
             livros = todos.Where(l => l.Status == StatusLeitura.Lendo).ToList();
         else if (latestButtonClicked == btRead)
             livros = todos.Where(l => l.Status == StatusLeitura.Lido).ToList();
+        else if (latestButtonClicked == btFavorites)
+            livros = todos.Where(l => l.Favorito).ToList();
         else
             livros = todos;
 

@@ -15,6 +15,8 @@ public partial class AddLivroPage : ContentPage
         _viewModel = viewModel;
         _serviceProvider = serviceProvider;
         BindingContext = _viewModel;
+
+        btWantRead_Clicked(btWantRead, EventArgs.Empty);
     }
 
     // Fluxo 1: Scanner
@@ -34,15 +36,22 @@ public partial class AddLivroPage : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 
-    private async void btSalvar_Clicked(object sender, EventArgs e)
+    private async void btSalvar_Clicked(object sender, EventArgs e) => await SalvarAsync(false);
+    private async void btListaDesejo_Clicked(object sender, EventArgs e) => await SalvarAsync(true);
+
+    private async Task SalvarAsync(bool listaDesejo)
     {
         if (_viewModel.NovoLivro == null) return;
 
-        var resultado = await _viewModel.SalvarLivroAsync(_statusLeitura);
+        // lista de desejos sempre entra como "Quero ler"
+        int? status = listaDesejo ? 0 : _statusLeitura;
+        var resultado = await _viewModel.SalvarLivroAsync(status, listaDesejo ? true : (bool?)null);
 
         if (resultado > 0)
         {
-            var toast = Toast.Make("Livro salvo!", ToastDuration.Short, 14);
+            var toast = Toast.Make(
+                listaDesejo ? "Adicionado à lista de desejos!" : "Livro salvo!",
+                ToastDuration.Short, 14);
             await toast.Show(cancellationTokenSource.Token);
             await Shell.Current.GoToAsync("..");
         }
@@ -56,7 +65,6 @@ public partial class AddLivroPage : ContentPage
             var toast = Toast.Make("Não foi possível salvar o livro.", ToastDuration.Short, 14);
             await toast.Show(cancellationTokenSource.Token);
         }
-
     }
 
     private Button? latestButtonClicked = null;
