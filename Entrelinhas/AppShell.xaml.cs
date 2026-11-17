@@ -9,6 +9,7 @@ namespace Entrelinhas
             InitializeComponent();
             Routing.RegisterRoute("addlivro", typeof(AddLivroPage));
             Routing.RegisterRoute("detalhelivro", typeof(BookPage));
+            Routing.RegisterRoute("sobre", typeof(SobrePage));
         }
     }
 }

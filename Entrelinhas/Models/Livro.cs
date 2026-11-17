@@ -1,4 +1,5 @@
 ﻿using SQLite;
+namespace Entrelinhas;
 
 public class Livro
 {
@@ -31,6 +32,8 @@ public class Livro
     public Livro Clone() => (Livro)MemberwiseClone();
     public string? Resumo { get; set; }
     public DateTime DataCadastro { get; set; } = DateTime.Now;
+
+    public DateTime? DataConclusao {  get; set; }
 }
 
 public enum StatusLeitura
@@ -38,4 +41,16 @@ public enum StatusLeitura
     QueroLer,
     Lendo,
     Lido
+}
+
+public class RegistroLeitura
+{
+    [PrimaryKey, AutoIncrement]
+    public int Id { get; set; }
+
+    [Indexed]
+    public int LivroId { get; set; }
+
+    public DateTime Data { get; set; }
+    public int Paginas { get; set; }
 }

@@ -1,9 +1,150 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:Entrelinhas.Converters"
+             xmlns:models="clr-namespace:Entrelinhas"
              x:Class="Entrelinhas.Views.UserPage"
              BackgroundColor="{StaticResource BackgroundColor}"
-             xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
-             droid:NavigationBar.Color="{StaticResource BackgroundColor}"
-             droid:NavigationBar.Style="DarkContent">
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <conv:UrlToImageConverter x:Key="UrlToImageConverter" />
+
+        <Style x:Key="Cartao" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="BackgroundColor" Value="#99FFFFFF" />
+            <Setter Property="Padding" Value="16,14" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,22,20,24" Spacing="10">
+
+            <!-- Cabeçalho com a bolinha de ajuda -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,4">
+                <Label Grid.Column="0" Text="Perfil"
+                       FontFamily="Fraunces" FontAttributes="Bold" FontSize="24"
+                       TextColor="{StaticResource FontColor}"
+                       VerticalOptions="Center" />
+
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 15"
+                        Stroke="{StaticResource MainColor}"
+                        StrokeThickness="1.5"
+                        BackgroundColor="Transparent"
+                        WidthRequest="30" HeightRequest="30"
+                        VerticalOptions="Center">
+                    <Label Text="?"
+                           FontFamily="Karla" FontAttributes="Bold" FontSize="16"
+                           TextColor="{StaticResource MainColor}"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAjudaTocado" />
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+
+            <!-- Avatar e nome -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14" Padding="0,6,0,8">
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 26"
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource MainColor}"
+                        WidthRequest="52" HeightRequest="52">
+                    <Label x:Name="lbInicial"
+                           FontFamily="Fraunces" FontAttributes="Bold" FontSize="24"
+                           TextColor="White"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                    <Label x:Name="lbNome"
+                           FontFamily="Fraunces" FontAttributes="Bold" FontSize="18"
+                           TextColor="{StaticResource FontColor}" />
+                    <Label Text="toque para editar o nome"
+                           FontFamily="Karla" FontSize="12"
+                           TextColor="{StaticResource SubFontColor}" />
+                </VerticalStackLayout>
+
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnNomeTocado" />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <!-- Meta de leitura do ano -->
+            <Border Style="{StaticResource Cartao}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" x:Name="lbMetaTitulo"
+                               FontFamily="Karla" FontAttributes="Bold" FontSize="13"
+                               TextColor="{StaticResource FontColor}" />
+                        <Label Grid.Column="1" x:Name="lbMetaAcao"
+                               FontFamily="Karla" FontAttributes="Bold" FontSize="12"
+                               TextColor="{StaticResource MainColor}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMetaTocada" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <HorizontalStackLayout Spacing="6">
+                        <Label x:Name="lbMetaConcluidos"
+                               FontFamily="Fraunces" FontAttributes="Bold" FontSize="26"
+                               TextColor="{StaticResource FontColor}"
+                               VerticalOptions="End" />
+                        <Label x:Name="lbMetaTotal"
+                               FontFamily="Karla" FontSize="13"
+                               TextColor="{StaticResource SubFontColor}"
+                               VerticalOptions="End" Margin="0,0,0,4" />
+                    </HorizontalStackLayout>
+
+                    <ProgressBar x:Name="pbMeta"
+                                 ProgressColor="{StaticResource MainColor}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Favoritos -->
+            <Border Style="{StaticResource Cartao}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="favoritos"
+                           FontFamily="Karla" FontAttributes="Bold" FontSize="13"
+                           TextColor="{StaticResource FontColor}" />
+
+                    <Label x:Name="lbSemFavoritos"
+                           Text="nenhum favorito ainda. Toque no coração na página de um livro."
+                           FontFamily="Karla" FontSize="12"
+                           TextColor="{StaticResource SubFontAlpha}" />
+
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout x:Name="listaFavoritos" Spacing="10">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:Livro">
+                                    <VerticalStackLayout WidthRequest="68">
+                                        <Border StrokeShape="RoundRectangle 7"
+                                                Stroke="{StaticResource SubFontAlpha}"
+                                                BackgroundColor="{StaticResource MainColorAlpha}"
+                                                WidthRequest="68" HeightRequest="98">
+                                            <Image Aspect="AspectFill"
+                                                   Source="{Binding CapaUrl, Converter={StaticResource UrlToImageConverter}}" />
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnFavoritoTocado" />
+                                            </Border.GestureRecognizers>
+                                        </Border>
+                                        <Label Text="{Binding Titulo}"
+                                               FontFamily="Karla" FontSize="11"
+                                               TextColor="{StaticResource FontColor}"
+                                               LineBreakMode="TailTruncation"
+                                               Margin="0,5,0,0" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

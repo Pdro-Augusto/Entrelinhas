@@ -71,7 +71,11 @@ namespace Entrelinhas
 
 
 #if DEBUG
-                builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
+#endif
+
+#if DEBUG
+            builder.Services.AddTransient<StatsPage>();
 #endif
 
             return builder.Build();

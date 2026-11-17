@@ -99,17 +99,22 @@ public partial class BookPage : ContentPage
     private void AtualizarProgresso()
     {
         if (livro is null) return;
-        
+
         int total = livro.Paginas ?? 0;
 
         if (total <= 0)
         {
             pbProgresso.Progress = 0;
+            lbPorcentagem.Text = "—";
             lbProgresso.Text = "Número de páginas não informado";
             return;
         }
 
         pbProgresso.Progress = Math.Clamp((double)livro.PaginasLidas / total, 0, 1);
+
+        int percentual = Math.Clamp(livro.PaginasLidas * 100 / total, 0, 100);
+        lbPorcentagem.Text = $"{percentual}%";
+
         lbProgresso.Text = $"{livro.PaginasLidas} de {total} páginas";
     }
 
@@ -144,8 +149,7 @@ public partial class BookPage : ContentPage
             return;
         }
 
-        livro.PaginasLidas = paginas;
-        await _viewModel.AtualizarLivroAsync();
+        await _viewModel.SalvaProgressoAsync(paginas);
         var toast = Toast.Make("Páginas atualizadas!", ToastDuration.Short, 14);
         await toast.Show(cancellationTokenSource.Token);
 
@@ -170,6 +174,9 @@ public partial class BookPage : ContentPage
             if (NomeStatus(valor) == escolha)
             {
                 livro.Status = valor;
+                livro.DataConclusao = valor == StatusLeitura.Lido
+                    ? livro.DataConclusao ?? DateTime.Now
+                    : null;
                 break;
             }
         }
@@ -230,7 +237,7 @@ public partial class BookPage : ContentPage
     private void AtualizarFavorito()
     {
         if (livro is null) return;
-        lbFavorito.Text = livro.Favorito ? "♥" : "♡";
+        lbFavorito.Text = livro.Favorito ? "★" : "☆";
         lbFavorito.TextColor = livro.Favorito
             ? Cor("MainColor", "#D85A30")
             : Cor("SubFontAlpha", "#A08C82");
@@ -288,7 +295,7 @@ public partial class BookPage : ContentPage
 
             var contorno = new Label
             {
-                Text = "♡",
+                Text = "☆",
                 FontSize = 34,
                 TextColor = Cor("SubFontAlpha", "#A08C82"),
                 WidthRequest = TamanhoCoracao,
@@ -299,7 +306,7 @@ public partial class BookPage : ContentPage
 
             var cheio = new Label
             {
-                Text = "♥",
+                Text = "★",
                 FontSize = 34,
                 TextColor = Cor("MainColor", "#D85A30"),
                 WidthRequest = TamanhoCoracao,

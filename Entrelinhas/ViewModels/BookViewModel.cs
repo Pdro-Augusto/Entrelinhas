@@ -84,4 +84,16 @@ public partial class BookViewModel : BaseViewModel
         if (!LivroId.HasValue) return;
         await _databaseService.ExcluirLivroAsync(LivroId.Value);
     }
+
+    public async Task SalvaProgressoAsync(int paginas)
+    {
+        if (Livro is null) return;
+
+        int anterior = Livro.PaginasLidas;
+        Livro.PaginasLidas = paginas;
+        await _databaseService.AtualizarLivroAsync(Livro);
+
+        if (paginas > anterior)
+            await _databaseService.RegistraLeituraAsync(Livro.Id, paginas - anterior);
+    }
 }

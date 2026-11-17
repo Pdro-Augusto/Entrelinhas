@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Entrelinhas.Views.SobrePage"
+             BackgroundColor="{StaticResource BackgroundColor}"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <Style x:Key="Cartao" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="BackgroundColor" Value="#99FFFFFF" />
+            <Setter Property="Padding" Value="16,14" />
+        </Style>
+
+        <Style x:Key="Chip" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="BackgroundColor" Value="{StaticResource MainColorAlpha}" />
+            <Setter Property="Padding" Value="10,3" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,22,20,24" Spacing="10">
+
+            <!-- Topo: voltar e título -->
+            <HorizontalStackLayout Spacing="12">
+                <Label Text="&#8592;" FontSize="24"
+                       TextColor="{StaticResource FontColor}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnVoltarClicado" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Text="Sobre o app"
+                       FontFamily="Fraunces" FontAttributes="Bold" FontSize="18"
+                       TextColor="{StaticResource FontColor}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <!-- Marca -->
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="6" Padding="0,22,0,12">
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Label Text=".entrelinhas"
+                           FontFamily="Fraunces" FontSize="32"
+                           TextColor="{StaticResource FontColor}" />
+                </HorizontalStackLayout>
+
+                <Label Text="o que você lê, quem você é"
+                       FontFamily="Karla" FontSize="13"
+                       TextColor="{StaticResource SubFontColor}"
+                       HorizontalOptions="Center" />
+
+                <Border Style="{StaticResource Chip}" HorizontalOptions="Center" Margin="0,4,0,0">
+                    <Label x:Name="lbVersao"
+                           FontFamily="Karla" FontSize="11"
+                           TextColor="{StaticResource SubFontColor}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- O que é -->
+            <Border Style="{StaticResource Cartao}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="o que é"
+                           FontFamily="Karla" FontAttributes="Bold" FontSize="13"
+                           TextColor="{StaticResource FontColor}" />
+                    <Label Text="Uma biblioteca pessoal no celular, para catalogar, acompanhar e anotar suas leituras. Funciona offline: seus dados ficam só no seu aparelho."
+                           FontFamily="Karla" FontSize="12" LineHeight="1.4"
+                           TextColor="{StaticResource SubFontColor}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Equipe -->
+            <Border Style="{StaticResource Cartao}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="equipe"
+                           FontFamily="Karla" FontAttributes="Bold" FontSize="13"
+                           TextColor="{StaticResource FontColor}" />
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto"
+                          ColumnSpacing="14" RowSpacing="4">
+                        <Label Grid.Row="0" Grid.Column="0" Text="autores"
+                               FontFamily="Karla" FontSize="12"
+                               TextColor="{StaticResource SubFontAlpha}" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="Pedro Falcão e Ruan Saugo"
+                               FontFamily="Karla" FontSize="12"
+                               TextColor="{StaticResource FontColor}"
+                               HorizontalTextAlignment="End" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Tecnologias -->
+            <Border Style="{StaticResource Cartao}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="feito com"
+                           FontFamily="Karla" FontAttributes="Bold" FontSize="13"
+                           TextColor="{StaticResource FontColor}" />
+
+                    <FlexLayout Wrap="Wrap" Direction="Row">
+                        <Border Style="{StaticResource Chip}" Margin="0,0,6,6">
+                            <Label Text=".NET MAUI" FontFamily="Karla" FontSize="11"
+                                   TextColor="{StaticResource SubFontColor}" />
+                        </Border>
+                        <Border Style="{StaticResource Chip}" Margin="0,0,6,6">
+                            <Label Text="C#" FontFamily="Karla" FontSize="11"
+                                   TextColor="{StaticResource SubFontColor}" />
+                        </Border>
+                        <Border Style="{StaticResource Chip}" Margin="0,0,6,6">
+                            <Label Text="SQLite" FontFamily="Karla" FontSize="11"
+                                   TextColor="{StaticResource SubFontColor}" />
+                        </Border>
+                        <Border Style="{StaticResource Chip}" Margin="0,0,6,6">
+                            <Label Text="Google Books" FontFamily="Karla" FontSize="11"
+                                   TextColor="{StaticResource SubFontColor}" />
+                        </Border>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Crédito -->
+            <Label Text="Informações dos livros fornecidas pela API do Google Books, OpenLibrary e BrasilAPI."
+                   FontFamily="Karla" FontSize="11"
+                   TextColor="{StaticResource SubFontAlpha}"
+                   HorizontalTextAlignment="Center"
+                   Margin="20,6,20,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

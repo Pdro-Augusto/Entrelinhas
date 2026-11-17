@@ -39,6 +39,8 @@ public partial class AddLivroPage : ContentPage
     private async void btSalvar_Clicked(object sender, EventArgs e) => await SalvarAsync(false);
     private async void btListaDesejo_Clicked(object sender, EventArgs e) => await SalvarAsync(true);
 
+
+
     private async Task SalvarAsync(bool listaDesejo)
     {
         if (_viewModel.NovoLivro == null) return;

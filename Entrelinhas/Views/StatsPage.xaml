@@ -6,4 +6,185 @@
              xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
              droid:NavigationBar.Color="{StaticResource BackgroundColor}"
              droid:NavigationBar.Style="DarkContent">
+    <ContentPage.Resources>
+        <Style x:Key="Cartao" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 14"/>
+            <Setter Property="StrokeThickness" Value="0"/>
+            <Setter Property="BackgroundColor" Value="#99FFFFFF"/>
+            <Setter Property="Padding" Value="16, 14"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20, 22, 20, 24"
+                             Spacing="10">
+            <VerticalStackLayout Spacing="3"
+                                 Margin="0, 0, 0, 4">
+                <Label Text="Estatísticas"
+                       FontFamily="Fraunces"
+                       FontAttributes="Bold"
+                       FontSize="24"
+                       TextColor="{StaticResource FontColor}"/>
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*, *, *"
+                  ColumnSpacing="8">
+                <Border Grid.Column="0"
+                        Style="{StaticResource Cartao}"
+                        Padding="6, 10">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label x:Name="lbLidos"
+                               Text="0"
+                               FontFamily="Fraunces"
+                               FontAttributes="Bold"
+                               FontSize="24"
+                               TextColor="{StaticResource MainColor}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="lidos"
+                               FontFamily="karla"
+                               FontSize="11"
+                               TextColor="{StaticResource SubFontColor}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Style="{StaticResource Cartao}"
+                        Padding="6, 10">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label x:Name="lbLendo"
+                               Text="0"
+                               FontFamily="Fraunces"
+                               FontAttributes="Bold"
+                               FontSize="24"
+                               TextColor="{StaticResource MainColor}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="lendo"
+                               FontFamily="Karla"
+                               FontSize="11"
+                               TextColor="{StaticResource SubFontColor}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                
+                <Border Grid.Column="2"
+                        Style="{StaticResource Cartao}"
+                        Padding="6, 10">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label x:Name="lbQueroLer"
+                               Text="0"
+                               FontFamily="Fraunces"
+                               FontAttributes="Bold"
+                               FontSize="24"
+                               TextColor="{StaticResource MainColor}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="quero ler"
+                               FontFamily="Karla"
+                               FontSize="11"
+                               TextColor="{StaticResource SubFontColor}"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Border Style="{StaticResource Cartao}">
+                <Grid ColumnDefinitions="*, Auto">
+                    <VerticalStackLayout Grid.Column="0"
+                                         Spacing="4"
+                                         VerticalOptions="Center">
+                        <Label x:Name="lbMesTitulo"
+                               Text="livros lido no mês"
+                               FontFamily="Karla"
+                               FontSize="12"
+                               TextColor="{StaticResource SubFontColor}"/>
+                        <Label x:Name="lbMesAnterior"
+                               FontFamily="Karla"
+                               FontSize="10"
+                               TextColor="{StaticResource SubFontAlpha}"/>
+                    </VerticalStackLayout>
+
+                    <Label Grid.Column="1"
+                           x:Name="lbLivrosMes"
+                           Text="0"
+                           FontFamily="Fraunces"
+                           FontAttributes="Bold"
+                           FontSize="34"
+                           TextColor="{StaticResource MainColor}"
+                           VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Cartao}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Grid.Column="0"
+                               Text="páginas por dia"
+                               FontFamily="Karla"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="{StaticResource FontColor}"/>
+                        <Label Grid.Column="1"
+                               x:Name="lbMedia"
+                               FontFamily="Karla"
+                               FontSize="11"
+                               TextColor="{StaticResource SubFontColor}"/>
+                    </Grid>
+
+                    <FlexLayout x:Name="graficoBarra"
+                                Direction="Row"
+                                JustifyContent="SpaceBetween"
+                                AlignItems="End"
+                                HeightRequest="100">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout WidthRequest="30"
+                                                     VerticalOptions="End"
+                                                     Spacing="35">
+                                    <Label Text="{Binding Valor}"
+                                           FontFamily="Karla"
+                                           FontSize="11"
+                                           TextColor="{Binding CorTexto}"
+                                           HorizontalTextAlignment="Center"/>
+                                    <BoxView HeightRequest="{Binding Altura}"
+                                             Color="{Binding Cor}"
+                                             CornerRadius="4"/>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+
+                    <BoxView HeightRequest="0.5"
+                             Color="{StaticResource SubFontAlpha}"/>
+                    <FlexLayout x:Name="graficoRotulos"
+                                Direction="Row"
+                                JustifyContent="SpaceBetween">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Label WidthRequest="30"
+                                       Text="{Binding Rotulo}"
+                                       FontFamily="Karla"
+                                       FontSize="11"
+                                       TextColor="{Binding CorTexto}"
+                                       HorizontalOptions="Center"/>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Cartao}">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="páginas lidas no total"
+                           FontFamily="Karla"
+                           FontSize="12"
+                           TextColor="{StaticResource SubFontColor}"/>
+                    <Label x:Name="lbPaginasTotal"
+                           Text="0"
+                           FontFamily="Fraunces"
+                           FontSize="30"
+                           TextColor="{StaticResource FontColor}"/>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -1,15 +1,22 @@
 using Entrelinhas.ViewModels;
-
+using Entrelinhas.Services;
 namespace Entrelinhas.Views;
 
 public partial class EstantePage : ContentPage
 {
+    private readonly DatabaseService _db;
+
+    private bool _mostrandoDesejos;
+
+    private static Color cor(string chave, string fallbakc) => Application.Current?.Resources.TryGetValue(chave, out var v) == true && v is Color c
+        ? c : Color.FromArgb(fallbakc);
     private readonly EstanteViewModel _viewModel;
-    public EstantePage(EstanteViewModel viewModel)
+    public EstantePage(EstanteViewModel viewModel, DatabaseService db)
 	{
 		InitializeComponent();
 		_viewModel = viewModel;
         BindingContext = _viewModel;
+        _db = db;
     }
 
     private Button? latestButtonClicked = null;
@@ -30,6 +37,7 @@ public partial class EstantePage : ContentPage
         btn.TextColor = Color.FromArgb("#EDEADE");
         latestButtonClicked = btn;
     }
+
     private void btAllBooks_Clicked(object sender, EventArgs e)
     {
         HighlightButton((Button)sender);
@@ -89,6 +97,12 @@ public partial class EstantePage : ContentPage
             HighlightButton(btAllBooks);
         }
 
+        if (_mostrandoDesejos)
+        {
+            await CarregarDesejosAsync();
+            return;
+        }
+
         ApplyFilter();
     }
 
@@ -96,5 +110,40 @@ public partial class EstantePage : ContentPage
     {
         if ((sender as BindableObject)?.BindingContext is not Livro livro) return;
             await Shell.Current.GoToAsync($"detalhelivro?livroId={livro.Id}");
+    }
+
+    private async void btListaDesejo_Clicked(object sender, EventArgs e)
+    {
+        _mostrandoDesejos = !_mostrandoDesejos;
+        AtualizarModo();
+
+        if (_mostrandoDesejos)
+            await CarregarDesejosAsync();
+        else
+            btAllBooks_Clicked(btAllBooks, EventArgs.Empty);
+    }
+
+    private async Task CarregarDesejosAsync()
+    {
+        var livros = await _db.ObterListaDesejoAsync();
+
+        BookList.ItemsSource = livros;
+        BookList.IsVisible = livros.Count > 0;
+        EmptyState.IsVisible = livros.Count == 0;
+    }
+
+    private void AtualizarModo()
+    {
+        bool desejos = _mostrandoDesejos;
+
+        btAllBooks.IsVisible = !desejos;
+        btReading.IsVisible = !desejos;
+        btRead.IsVisible = !desejos;
+        btFavorites.IsVisible = !desejos;
+
+        lbModoDesejos.IsVisible = desejos;
+
+        btListaDesejo.Margin = desejos ? new Thickness(0)
+            : new Thickness(33, 0, 0, 0);
     }
 }
